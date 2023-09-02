@@ -1,0 +1,20 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 30px;
+    margin: 70px 0;
+}
+
+.mainTitle {
+    font-size: 3em;
+}
+
+.mainContent {
+    font-size: 1.2em;
+    color: gray;
+}
+
+.mainImage {
+    width: 400px;
+}
