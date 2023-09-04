@@ -1,19 +1,16 @@
 type InputProps = {
-    label?: string,
+    children: React.ReactNode,
     type: string,
     placeholder?: string,
-    value?: string | number,
-    defaultValue?: string | number,
-    event?: React.Dispatch<React.SetStateAction<string | number>> ,
-    action?: React.MouseEventHandler,
+    value?: string | number | readonly string[] | undefined,
+    handleChange: React.Dispatch<React.SetStateAction<any>>,
+    handleClick?: React.MouseEventHandler,
 }
 
-function Input({label, type, placeholder, value, defaultValue, event, action}: InputProps) {
+export default function Input({ children, type, placeholder, value, handleChange, handleClick }: InputProps) {
     return (
-        <label>{label}
-            <input type={type} value={value} defaultValue={defaultValue} placeholder={placeholder} onChange={(e) => event(e.target.value)} required={true} onClick={action} />
+        <label className="flex flex-col gap-y-3 font-bold">{children}
+            <input className="font-normal p-2 text-gray-700 border-2 rounded-md border-black" type={type} value={value} placeholder={placeholder} onChange={(e) => handleChange(e.target.value)} required={true} onClick={handleClick} />
         </label>
     )
 }
-
-export default Input
