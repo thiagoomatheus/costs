@@ -11,7 +11,7 @@ import Container from "./components/layout/Container";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-export const app = initializeApp({
+const app = initializeApp({
   apiKey: "AIzaSyCyGIgTSkafFGsVTBJCqbNFQVjpXJtw9Fg",
   authDomain: "costs-eb4d9.firebaseapp.com",
   projectId: "costs-eb4d9",

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
 import { db } from "../../App"
-import { collection, getDocs } from "firebase/firestore";
+import { DocumentReference, doc, getDoc } from "firebase/firestore"
 
 type Props = {
     children: React.ReactNode,
@@ -12,18 +12,21 @@ function Select({children, handleChange, defaultValue}: Props) {
 
     const [categories, setCategories] = useState<{id: number, name: string}[]>()
 
-    useEffect(() => {
-        const data = async () => {
-            const r = await getDocs(collection(db, "content"))
-            r.forEach((doc) => {
-                setCategories(doc.data().categories)     
-            })
-        }
-        data()
-    }, [])
+    // Usando Doc
 
-    console.log("render");
-    
+    useEffect(() => {
+        const docRef = doc(db, "content", "categories")
+        const getData = async (docRef: DocumentReference) => {
+            const r = await getDoc(docRef)
+            if (!r.exists()) {
+                console.log("erro");
+                return
+            }
+            setCategories(r.data().categories);
+        }
+        getData(docRef)
+        
+    },[])
 
     return (
         <label className="flex flex-col gap-y-3 font-bold">{children}:
