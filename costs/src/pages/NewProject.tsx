@@ -27,17 +27,46 @@ export default function NewProject() {
     //     )
     // }
 
+    // function postData() { // Post com localStorage - Funcionando muito bem!
+
+    //     const getData = localStorage.length
+
+    //     let id = localStorage.length + 1
+
+    //     if (getData === 0) {
+    //         let project = [{
+    //             id: id,
+    //             name: name,
+    //             budget: budget, 
+    //             category: category
+    //         }]
+    //         localStorage.setItem("projects", JSON.stringify(project))
+    //         navigate("/projects")
+    //     }
+    //     else {
+    //         let projects = JSON.parse(localStorage.getItem("projects"))
+    //         let project = {
+    //             id: projects.length + 1,
+    //             name: name,
+    //             budget: budget, 
+    //             category: category
+    //         }
+    //         projects.push(project)
+    //         localStorage.setItem("projects", JSON.stringify(projects))
+    //         navigate("/projects")
+    //     }
+    // }
+
     async function postData(project: ProjectType) {
-        const projectsRef = doc(db, "users", "3lMligpcZ07hUbWgKvrD");
+        const docRef = doc(db, "projects", "3lMligpcZ07hUbWgKvrD");
         try {
-            await updateDoc(projectsRef, {
+            await updateDoc(docRef, {
                 projects: arrayUnion(project)
             })
-            console.log("ok");
-            
+            navigate("/projects", {state: {message: "Projeto criado com sucesso", type: "success"}})  
         } catch (error) {
             console.log(error);
-        }
+        } 
     }
 
     return (

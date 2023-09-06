@@ -1,7 +1,14 @@
 import Button from "./Button"
 import Styles from "./MainTitleWithButton.module.css"
 
-function MainTitleWithButton({title, to, btnText, action}) {
+type Props = {
+    title: string,
+    to: string,
+    btnText: string,
+    action?: () => void
+}
+
+function MainTitleWithButton({title, to, btnText, action}: Props) {
 
     function handleClick() {
         if (action) {

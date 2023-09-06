@@ -1,22 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import Card from './Card'
 import Loading from "../layout/Loading"
 import Styles from './ProjectsOpen.module.css'
+import { ProjectsContext } from '../../pages/Projects'
 
-    function ProjectsOpen() {
+export default function ProjectsOpen() {
         
-        const [projects, setProjects] = useState([])
+        const projects = useContext(ProjectsContext)
         const [loading, setLoading] = useState(true)
+        console.log(projects);
+        
 
-        useEffect(() => {
-            fetch("http://localhost:5000/projects")
-            .then((resp) => resp.json())
-            .then((data) => {
-                setProjects(data);
-                setLoading(false)
-            })
-            .catch((err) => console.log(err))
-        }, [])
+        // useEffect(() => {
+        //     fetch("http://localhost:5000/projects")
+        //     .then((resp) => resp.json())
+        //     .then((data) => {
+        //         setProjects(data);
+        //         setLoading(false)
+        //     })
+        //     .catch((err) => console.log(err))
+        // }, [])
 
     // const [projects, setProjects] = useState(JSON.parse(localStorage.getItem("projects"))) // Com localStorage - funcionando
 
@@ -42,5 +45,3 @@ import Styles from './ProjectsOpen.module.css'
         </div>
     )
 }
-
-export default ProjectsOpen

@@ -10,6 +10,7 @@ import Projeto from "./pages/Projeto";
 import Container from "./components/layout/Container";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import Projects from "./pages/Projects";
 
 const app = initializeApp({
   apiKey: "AIzaSyCyGIgTSkafFGsVTBJCqbNFQVjpXJtw9Fg",
@@ -30,11 +31,11 @@ export default function App() {
       <Container>
         <Routes>
             <Route path='/' element={ <Home />} />
-            <Route path='/projects' element={ <Projetos />} />
+            <Route path='/projects' element={ <Projects />} />
             <Route path='/company' element={ <Empresa />} />
             <Route path='/contact' element={ <Contato />} />
             <Route path='/newproject' element={ <NewProject />} />
-            <Route path='/projects/:id' element={ <Projeto />} />
+            {/* <Route path='/projects/:id' element={ <Projeto />} /> */}
         </Routes>
       </Container>
       <Footer />

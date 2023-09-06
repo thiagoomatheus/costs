@@ -1,8 +1,18 @@
 import Styles from './Card.module.css'
 import ButtonWithIcon from './ButtonWithIcon'
 import { useNavigate } from "react-router-dom"
+import { ProjectType } from '../form/ProjectForm'
 
-function Card({id, name, budget, category, projects, setProjects}) {
+type Props = {
+    id: number,
+    name: string,
+    budget: number,
+    category: string,
+    projects: ProjectType,
+    setProjects: () => void
+}
+
+function Card({id, name, budget, category, projects, setProjects}: Props) {
 
     // function deleteProject() { // Funcionando com localStorage
     //     projects = projects.filter(projects => projects.id !== id)

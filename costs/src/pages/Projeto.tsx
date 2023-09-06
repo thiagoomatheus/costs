@@ -2,14 +2,14 @@ import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
 import MainTitleWithButton from "../components/layout/MainTitleWithButton"
 import Loading from "../components/layout/Loading"
-import ProjectForm from "../components/form/ProjectForm"
+import ProjectForm, { ProjectType } from "../components/form/ProjectForm"
 import ServiceForm from "../components/form/ServiceForm"
 import Message from "../components/layout/Message"
 import Styles from "./Projeto.module.css"
 import styleContainer from "../components/Projects/ProjectsOpen.module.css"
 import ServiceCard from "../components/layout/ServiceCard"
 
-function Projeto() {
+export default function Projeto() {
 
     // Hooks
     const location = useLocation()
@@ -40,17 +40,17 @@ function Projeto() {
     })
 
     // Functions
-    useEffect(() => {
-        fetch(`http://localhost:5000/projects/${id}`)
-            .then((resp) => resp.json())
-            .then((data) => {
-                setProjects(data)
-                setLoading(false)
-                setShowProject(true)
-                setShowService(true)
-            })
-            .catch((err) => console.log(err))
-    }, [id])
+    // useEffect(() => {
+    //     fetch(`http://localhost:5000/projects/${id}`)
+    //         .then((resp) => resp.json())
+    //         .then((data) => {
+    //             setProjects(data)
+    //             setLoading(false)
+    //             setShowProject(true)
+    //             setShowService(true)
+    //         })
+    //         .catch((err) => console.log(err))
+    // }, [id])
 
     function changeProjectBtnText() {
         setShowProject(!showProject)
@@ -61,7 +61,7 @@ function Projeto() {
     }
 
     // Action Form
-    function editData(project) {
+    function editData(project: ProjectType) {
         if (project.cost > project.budget) {
             navigate(`/projects`, { state: { message: "O orçamento não pode ser menor que o custo do projeto", type: "error" } })
             return
@@ -85,7 +85,7 @@ function Projeto() {
         )
     }
 
-    function createService(project) {
+    function createService(project: ProjectType) {
 
         fetch(`http://localhost:5000/projects/${id}`, {
             method: "PATCH",
@@ -119,7 +119,7 @@ function Projeto() {
             body: JSON.stringify(projectUpdate)
         }).then((resp) => resp.json()
         ).then(
-            (data) => {
+            () => {
                 setProjects(projectUpdate);
                 navigate(`/projects/${projectUpdate.id}`, { state: { message: "Serviço removido com sucesso", type: "error" } })
             }
@@ -182,5 +182,3 @@ function Projeto() {
         </main>
     )
 }
-
-export default Projeto

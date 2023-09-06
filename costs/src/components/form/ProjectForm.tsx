@@ -13,14 +13,13 @@ export type ProjectType = {
         cost: number,
         description: string
     }[] | undefined
-}
+} 
 
 type Props = {
     btnText: string,
     dataProject?: ProjectType,
     handleSubmit: (project: ProjectType) => void,
 }
-
 
 export default function ProjectForm({btnText, dataProject, handleSubmit}: Props) {
 
@@ -38,7 +37,7 @@ export default function ProjectForm({btnText, dataProject, handleSubmit}: Props)
             services: dataProject ? dataProject.services : []
         }
         handleSubmit(project)
-    }
+    }   
 
     // function postData(e) {
     //     e.preventDefault()
@@ -50,36 +49,7 @@ export default function ProjectForm({btnText, dataProject, handleSubmit}: Props)
     //     action(projects)
     // }
 
-    // function postData(e) { // Post com localStorage - Funcionando muito bem!
-    //     e.preventDefault()
 
-    //     const getData = localStorage.length
-
-    //     let id = localStorage.length + 1
-
-    //     if (getData === 0) {
-    //         let project = [{
-    //             id: id,
-    //             name: name,
-    //             budget: budget, 
-    //             category: category
-    //         }]
-    //         localStorage.setItem("projects", JSON.stringify(project))
-    //         navigate("/projects")
-    //     }
-    //     else {
-    //         let projects = JSON.parse(localStorage.getItem("projects"))
-    //         let project = {
-    //             id: projects.length + 1,
-    //             name: name,
-    //             budget: budget, 
-    //             category: category
-    //         }
-    //         projects.push(project)
-    //         localStorage.setItem("projects", JSON.stringify(projects))
-    //         navigate("/projects")
-    //     }
-    // }
 
     return(
         <>
