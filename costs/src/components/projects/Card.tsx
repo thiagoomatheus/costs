@@ -1,18 +1,16 @@
-import Styles from './Card.module.css'
 import ButtonWithIcon from './ButtonWithIcon'
+import { doc, updateDoc, deleteField, arrayRemove, query, where, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom"
+import { ProjectsData } from '../../pages/Projects'
 import { ProjectType } from '../form/ProjectForm'
+import { db } from '../../App';
 
 type Props = {
-    id: number,
-    name: string,
-    budget: number,
-    category: string,
-    projects: ProjectType,
-    setProjects: () => void
+    project: ProjectType
+    setProjects?: React.Dispatch<React.SetStateAction<ProjectsData>>,
 }
 
-function Card({id, name, budget, category, projects, setProjects}: Props) {
+export default function Card({project, setProjects}: Props) {
 
     // function deleteProject() { // Funcionando com localStorage
     //     projects = projects.filter(projects => projects.id !== id)
@@ -20,38 +18,66 @@ function Card({id, name, budget, category, projects, setProjects}: Props) {
     //     setProjects(projects)
     // }
 
+    let color: string = ""
+
+    if (project.category === "Infra") {
+        color = "#ffaebc";
+    } else if (project.category === "Desenvolvimento") {
+        color = "#a0e7e5";
+    } else if (project.category === "Planejamento") {
+        color = "#fbe7c6";
+    } else if (project.category === "Design") {
+        color = "#b4f8c8";
+    }
+    
     const navigate = useNavigate()
 
-    function deleteProject() {
+    async function deleteProject() {
 
-        fetch(`http://localhost:5000/projects/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-type": "application/json",
-            },
-        })
-        .then(() => {
-            setProjects(projects.filter(projects => projects.id !== id))
-            navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})
-        })
-        .catch((err) => console.log(err))
+    //     fetch(`http://localhost:5000/projects/${id}`, {
+    //         method: "DELETE",
+    //         headers: {
+    //             "Content-type": "application/json",
+    //         },
+    //     })
+    //     .then(() => {
+    //         // setProjects(projects.filter(projects => projects.id !== id))
+    //         navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})
+    //     })
+    //     .catch((err) => console.log(err))
+        const projectRef = doc(db, "projects", "3lMligpcZ07hUbWgKvrD")
+        try {
+            await updateDoc(projectRef, {
+                projects: arrayRemove(project)
+            })
+            navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})  
+        } catch (error) {
+            console.log(error);
+        } 
     }
 
     function editProjects() {
-        navigate(`/projects/${id}`)
+        // navigate(`/projects/${id}`)
     }
 
     return (
-        <div className={Styles.cardContainer}>
-            <h2>{name}</h2>
-            <p><span>Orçamento:</span> R$ {budget}</p>
-            <p className={Styles.cardCategory}><span className={`${Styles[category.toLowerCase()]}`}></span>{category}</p>
-            <div className={Styles.cardButtons}>
-                <ButtonWithIcon text="Editar" icon='edit' action={editProjects} />
-                <ButtonWithIcon text="Delete" icon='delete' action={deleteProject} />
-            </div>
-        </div>
+        <>
+            {project && (
+                <div className="flex flex-col gap-y-5 min-h-[220px] w-64 p-4 text-[#575757] rounded-md border border-[#575757] shadow-md">
+                    <h2 className='p-2 bg-[#222] text-orange font-bold text-xl'>{project.name}</h2>
+                    <p><span className='font-bold'>Orçamento:</span> R$ {project.budget}</p>
+                    <p className="flex items-center">
+                        <span className={`block w-3 h-3 rounded-md mr-1`} style={{
+                            backgroundColor: color
+                        }}></span>
+                        {project.category}
+                    </p>
+                    <div className="flex flex-row gap-x-4">
+                        <ButtonWithIcon text="Editar" icon='edit' handleClick={editProjects} />
+                        <ButtonWithIcon text="Delete" icon='delete' handleClick={deleteProject} />
+                    </div>
+                </div>
+            )}
+        </>
     )
 }
-
-export default Card

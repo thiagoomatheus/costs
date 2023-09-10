@@ -1,8 +1,10 @@
 import Input from "./Input"
 import Select from "./Select"
 import { useState } from "react"
+import uuid from "react-uuid"
 
 export type ProjectType = {
+    id: string,
     name: string | undefined,
     budget: number | undefined,
     cost: number | undefined,
@@ -30,6 +32,7 @@ export default function ProjectForm({btnText, dataProject, handleSubmit}: Props)
     function handleSubmitForm(e: React.FormEvent) {
         e.preventDefault()
         let project: ProjectType = {
+            id: uuid(),
             name: name,
             budget: budget,
             cost: dataProject ? dataProject.cost : 0,
@@ -37,20 +40,8 @@ export default function ProjectForm({btnText, dataProject, handleSubmit}: Props)
             services: dataProject ? dataProject.services : []
         }
         handleSubmit(project)
-    }   
-
-    // function postData(e) {
-    //     e.preventDefault()
-    //     action(projects)
-    // }
-
-    // function editData(e) {
-    //     e.preventDefault()
-    //     action(projects)
-    // }
-
-
-
+    }
+    
     return(
         <>
             <form className="flex flex-col gap-y-5" onSubmit={handleSubmitForm}>

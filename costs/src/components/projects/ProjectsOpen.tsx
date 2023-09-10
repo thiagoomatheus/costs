@@ -28,7 +28,7 @@ export default function ProjectsOpen() {
     return (
         <div className={Styles.projectsContainer} >
             
-            {projects !== null && projects.length !== 0 && (
+            {/* {projects !== null && projects.length !== 0 && (
                 projects.map(({id, name, budget, category}) => (
                     <Card key={id} id={id} name={name} budget={budget} category={category} projects={projects} setProjects={setProjects}/>
             )
@@ -40,7 +40,7 @@ export default function ProjectsOpen() {
             )}
             {!loading && projects.length === 0 && (
                 <p>Que pena! Você ainda não tem um projeto. Crie um clicando no botão acima e visualize aqui!</p>
-            )}
+            )} */}
             
         </div>
     )

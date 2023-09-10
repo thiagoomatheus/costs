@@ -1,11 +1,7 @@
-import Styles from './Brand.module.css'
-
-function Brand() {
+export default function Brand() {
     return (
         <>
-            <span className={Styles.brand}>Costs</span>
+            <span className="bg-black text-[orange] font-bold px-2">Costs</span>
         </>
     )
 }
-
-export default Brand

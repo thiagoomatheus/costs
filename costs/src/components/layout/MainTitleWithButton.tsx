@@ -1,28 +1,17 @@
 import Button from "./Button"
-import Styles from "./MainTitleWithButton.module.css"
 
 type Props = {
     title: string,
     to: string,
-    btnText: string,
-    action?: () => void
+    btnText: string
 }
 
-function MainTitleWithButton({title, to, btnText, action}: Props) {
-
-    function handleClick() {
-        if (action) {
-            action()
-            return
-        }
-    }
+export default function MainTitleWithButton({title, to, btnText}: Props) {
 
     return (
-    <header className={Styles.header}>
-        <h1>{title}</h1>
-        <Button to={to} text={btnText} handleClick={handleClick} />
-    </header>
+        <div className="flex flex-row justify-between items-center">
+            <h1 className="text-5xl font-bold">{title}</h1>
+            <Button to={to} text={btnText} />
+        </div>
     )
 }
-
-export default MainTitleWithButton
