@@ -1,7 +1,6 @@
 import { useLocation, useNavigate} from "react-router-dom"
 import { useState, useEffect, createContext } from "react"
 import { doc, getDoc } from "firebase/firestore"
-import uuid from "react-uuid"
 import { db } from "../App"
 import { ProjectType } from "../components/form/ProjectForm"
 import MainTitleWithButton from "../components/layout/MainTitleWithButton"
@@ -9,9 +8,7 @@ import Message from "../components/layout/Message"
 import Card from "../components/projects/Card"
 import Loading from "../components/layout/Loading";
 
-export type ProjectsData = [
-    ProjectType
-] | undefined
+export type ProjectsData = ProjectType[] | undefined
 
 export const ProjectsContext = createContext<ProjectsData>(undefined)
 
@@ -68,7 +65,7 @@ export default function Projects() {
                 {projects && (
                     <div className="flex flex-row flex-wrap gap-x-9 gap-y-10">
                         {projects.map((project) => (
-                                <Card key={project.id} project={project} setProjects={setProjects}/>
+                            <Card key={project.id} project={project} handleUpdateProjects={setProjects}/>
                         )
                         )}
                     </div>

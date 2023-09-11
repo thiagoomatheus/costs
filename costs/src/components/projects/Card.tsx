@@ -1,22 +1,19 @@
 import ButtonWithIcon from './ButtonWithIcon'
 import { doc, updateDoc, deleteField, arrayRemove, query, where, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom"
-import { ProjectsData } from '../../pages/Projects'
+import { ProjectsContext, ProjectsData } from '../../pages/Projects'
 import { ProjectType } from '../form/ProjectForm'
 import { db } from '../../App';
+import { useContext } from 'react';
 
 type Props = {
     project: ProjectType
-    setProjects?: React.Dispatch<React.SetStateAction<ProjectsData>>,
+    handleUpdateProjects: React.Dispatch<React.SetStateAction<ProjectsData>>,
 }
 
-export default function Card({project, setProjects}: Props) {
+export default function Card({project, handleUpdateProjects}: Props) {
 
-    // function deleteProject() { // Funcionando com localStorage
-    //     projects = projects.filter(projects => projects.id !== id)
-    //     localStorage.setItem("projects", JSON.stringify(projects))
-    //     setProjects(projects)
-    // }
+    const projects = useContext(ProjectsContext)
 
     let color: string = ""
 
@@ -45,11 +42,19 @@ export default function Card({project, setProjects}: Props) {
     //         navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})
     //     })
     //     .catch((err) => console.log(err))
+
+    //     function deleteProject() { // Funcionando com localStorage
+    //     projects = projects.filter(projects => projects.id !== id)
+    //     localStorage.setItem("projects", JSON.stringify(projects))
+    //     setProjects(projects)
+    // }
+    
         const projectRef = doc(db, "projects", "3lMligpcZ07hUbWgKvrD")
         try {
             await updateDoc(projectRef, {
                 projects: arrayRemove(project)
             })
+            handleUpdateProjects(projects?.filter((item) => item.id !== project.id))
             navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})  
         } catch (error) {
             console.log(error);
@@ -57,7 +62,7 @@ export default function Card({project, setProjects}: Props) {
     }
 
     function editProjects() {
-        // navigate(`/projects/${id}`)
+        navigate(`/projects/${project.id}`)
     }
 
     return (
