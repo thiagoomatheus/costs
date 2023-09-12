@@ -1,20 +1,29 @@
 import ButtonWithIcon from "../projects/ButtonWithIcon"
-import Styles from "../Projects/Card.module.css"
 
-function ServiceCard({service, cost, description, id, handleRemove}) {
+type Service = {
+        id: number;
+        service: string;
+        cost: number;
+        description: string;
+}
+
+type Props = {
+    service: Service,
+    handleRemove: (id: number, cost: number | undefined) => void
+}
+
+export default function ServiceCard({service, handleRemove}: Props) {
     
     function remove() {
-        handleRemove(id, cost)
+        handleRemove(service.id, service.cost)
     }
 
     return(
-        <div className={Styles.cardContainer}>
-            <h2>{service}</h2>
-            <p><span>Custo do serviço:</span> R$ {cost}</p>
-            <p><span>Descrição do serviço:</span> {description}</p>
-            <ButtonWithIcon text="Excluir" icon="delete" action={remove}/>
+        <div className="">
+            <h2>{service.service}</h2>
+            <p><span>Custo do serviço:</span> R$ {service.cost}</p>
+            <p><span>Descrição do serviço:</span> {service.description}</p>
+            <ButtonWithIcon text="Excluir" icon="delete" handleClick={remove}/>
         </div>
     )
 }
-
-export default ServiceCard

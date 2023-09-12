@@ -25,36 +25,39 @@ type Props = {
 
 export default function ProjectForm({btnText, dataProject, handleSubmit}: Props) {
 
-    const [name, setName] = useState<string>()
-    const [budget, setBudget] = useState<number>()
-    const [category, setCategory] = useState<string>()
+    const [project, setProject] = useState<ProjectType>({
+        id: dataProject ? dataProject.id : uuid(),
+        name: dataProject ? dataProject.name : "",
+        budget: dataProject ? dataProject.budget : 0,
+        cost: dataProject ? dataProject.cost : 0,
+        category: dataProject ? dataProject.category : "",
+        services: dataProject ? dataProject.services : []
+    })
 
-    function handleSubmitForm(e: React.FormEvent) {
-        e.preventDefault()
-        let project: ProjectType = {
-            id: uuid(),
-            name: name,
-            budget: budget,
-            cost: dataProject ? dataProject.cost : 0,
-            category: category,
-            services: dataProject ? dataProject.services : []
-        }
-        handleSubmit(project)
+    function handleChange(e:React.ChangeEvent) {
+        const target = e.target as HTMLInputElement;
+        setProject({
+            ...project,
+            [target.name]: target.value
+        })
     }
-    
+
     return(
         <>
-            <form className="flex flex-col gap-y-5" onSubmit={handleSubmitForm}>
+            <form className="flex flex-col gap-y-5" onSubmit={(e: React.FormEvent) => {
+                e.preventDefault()
+                handleSubmit(project)
+            }}>
 
-                <Input value={dataProject ? dataProject.name : undefined } type='text' placeholder='Insira o nome de um projeto' handleChange={setName}>
+                <Input name="name" value={project.name } type='text' placeholder='Insira o nome de um projeto' handleChange={handleChange}>
                     Nome do projeto:
                 </Input>
 
-                <Input value={dataProject ? dataProject.budget : undefined } type='number' placeholder='Insira o orçamento total' handleChange={setBudget}>
+                <Input name="budget" value={project.budget} type='number' placeholder='Insira o orçamento total' handleChange={handleChange}>
                     Orçamento do projeto:
                 </Input>
 
-                <Select defaultValue={dataProject ? dataProject.category : undefined } handleChange={setCategory}>
+                <Select nameHTML="category" defaultValue={project.category} handleChange={handleChange}>
                     Selecione a categoria:
                 </Select>
 

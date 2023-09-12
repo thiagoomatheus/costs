@@ -1,19 +1,19 @@
 import ButtonWithIcon from './ButtonWithIcon'
-import { doc, updateDoc, deleteField, arrayRemove, query, where, getDoc } from "firebase/firestore";
+import { doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { useNavigate } from "react-router-dom"
-import { ProjectsContext, ProjectsData } from '../../pages/Projects'
+import { ProjectsContext, ProjectsData, SetProjectsContext } from '../../App'
 import { ProjectType } from '../form/ProjectForm'
 import { db } from '../../App';
 import { useContext } from 'react';
 
 type Props = {
     project: ProjectType
-    handleUpdateProjects: React.Dispatch<React.SetStateAction<ProjectsData>>,
 }
 
-export default function Card({project, handleUpdateProjects}: Props) {
+export default function Card({project}: Props) {
 
     const projects = useContext(ProjectsContext)
+    const setProjects = useContext(SetProjectsContext)
 
     let color: string = ""
 
@@ -54,7 +54,7 @@ export default function Card({project, handleUpdateProjects}: Props) {
             await updateDoc(projectRef, {
                 projects: arrayRemove(project)
             })
-            handleUpdateProjects(projects?.filter((item) => item.id !== project.id))
+            setProjects(projects?.filter((item) => item.id !== project.id))
             navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})  
         } catch (error) {
             console.log(error);
