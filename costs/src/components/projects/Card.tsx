@@ -1,5 +1,5 @@
 import ButtonWithIcon from './ButtonWithIcon'
-import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { doc, updateDoc, arrayRemove, deleteDoc, collection, query, where, getDoc, getDocs, collectionGroup } from "firebase/firestore";
 import { useNavigate } from "react-router-dom"
 import { ProjectsContext, ProjectsData, SetProjectsContext } from '../../App'
 import { ProjectType } from '../form/ProjectForm'
@@ -49,16 +49,26 @@ export default function Card({project}: Props) {
     //     setProjects(projects)
     // }
     
-        const projectRef = doc(db, "projects", "3lMligpcZ07hUbWgKvrD")
+        // const projectRef = doc(db, "projects", "3lMligpcZ07hUbWgKvrD")
+        // try {
+        //     await updateDoc(projectRef, {
+        //         projects: arrayRemove(project)
+        //     })
+        //     setProjects(projects?.filter((item) => item.id !== project.id))
+        //     navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})  
+        // } catch (error) {
+        //     console.log(error);
+        // } 
+
         try {
-            await updateDoc(projectRef, {
-                projects: arrayRemove(project)
-            })
+            await deleteDoc(doc(db, 'userId', project.id))
             setProjects(projects?.filter((item) => item.id !== project.id))
-            navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})  
+            navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})
         } catch (error) {
-            console.log(error);
-        } 
+            console.log(error)
+        }
+        
+        
     }
 
     function editProjects() {
@@ -79,7 +89,9 @@ export default function Card({project}: Props) {
                     </p>
                     <div className="flex flex-row gap-x-4">
                         <ButtonWithIcon text="Editar" icon='edit' handleClick={editProjects} />
-                        <ButtonWithIcon text="Delete" icon='delete' handleClick={deleteProject} />
+                        <ButtonWithIcon text="Delete" icon='delete' handleClick={() => {
+                            deleteProject()
+                        }} />
                     </div>
                 </div>
             )}

@@ -8,12 +8,13 @@ import Message from "../components/layout/Message"
 import Styles from "./Projeto.module.css"
 import styleContainer from "../components/Projects/ProjectsOpen.module.css"
 import ServiceCard from "../components/layout/ServiceCard"
-import { ProjectsContext, db } from "../App"
-import { doc, setDoc, updateDoc } from "firebase/firestore"
+import { ProjectsContext, SetProjectsContext, db } from "../App"
+import { doc, setDoc} from "firebase/firestore"
 
 export default function ProjectId() {
 
     const projects = useContext(ProjectsContext)
+    const setProjects = useContext(SetProjectsContext)
 
     // Hooks
     const location = useLocation()
@@ -21,7 +22,7 @@ export default function ProjectId() {
     const { id } = useParams()
 
     const [loading, setLoading] = useState(true)
-    const [project, setProject] = useState<ProjectType[]>()
+    const [project, setProject] = useState<ProjectType>()
     const [showProject, setShowProject] = useState(false)
     const [showService, setShowService] = useState(false)
 
@@ -60,7 +61,7 @@ export default function ProjectId() {
 
     useEffect(() => {
         if (projects !== undefined) {
-            setProject(projects.filter((project) => project.id === id))
+            setProject(projects.filter((project) => project.id === id)[0])            
             setLoading(false)
             setShowProject(true)
             setShowService(true)
@@ -99,11 +100,32 @@ export default function ProjectId() {
     //     ).catch(
     //         (err) => console.log(err)
     //     )
-        
-        const docRef = doc(db, "projects", "3lMligpcZ07hUbWgKvrD")
+    try {
+        setDoc(doc(db, 'userId', project.id), project, {merge: true})
+        const newProjects = projects?.map(projectServer => {
+            if (projectServer.id !== id) {
+                return projectServer
+            } else {
+                return {
+                    id: project.id,
+                    name: project.name,
+                    budget: project.budget,
+                    cost: project.cost,
+                    category: project.category,
+                    services: project.services
+                }
+            }
+        })
+        setProject(project)
+        setProjects(newProjects)
+        navigate(`/projects/${project.id}`, { state: { message: "Projeto alterado com sucesso", type: "success" } })
+        changeProjectBtnText()
+    } catch (error) {
+        console.log(error);
+    }
     }
 
-    // function createService(project: ProjectType) {
+    function createService(project: ProjectType) {}
 
     //     fetch(`http://localhost:5000/projects/${id}`, {
     //         method: "PATCH",
@@ -155,28 +177,28 @@ export default function ProjectId() {
 
             {project && (
                 <MainTitleWithButton to="" btnText={showProject ? "Editar projeto" : "Fechar"} handleClick={changeProjectBtnText}>
-                    Projeto: {project[0].name}
+                    Projeto: {project.name}
                 </MainTitleWithButton>
             )}
             {project && showProject && (
                 <>
                     <div className={Styles.container}>
                         <p>
-                            <span>Categoria:</span> {project[0].category}
+                            <span>Categoria:</span> {project.category}
                         </p>
                         <p>
-                            <span>Total Orçamento:</span> R$ {project[0].budget}
+                            <span>Total Orçamento:</span> R$ {project.budget}
                         </p>
                         <p>
-                            <span>Total Utilizado:</span> R$ {project[0].cost}
+                            <span>Total Utilizado:</span> R$ {project.cost}
                         </p>
                     </div>
                     <MainTitleWithButton to="" btnText={showService ? "Adicionar serviço" : "Fechar"} handleClick={changeServiceBtnText}>
                         Serviços
                     </MainTitleWithButton>
-                    {project && project[0].services?.length ? (
+                    {project && project.services?.length ? (
                         <div className={styleContainer.projectsContainer}>
-                            {project[0].services.map((service) => (
+                            {project.services.map((service) => (
                                     <ServiceCard service={service} handleRemove={removeService} key={id} />
                                 ))
                             }
@@ -187,7 +209,10 @@ export default function ProjectId() {
                 </>
             )}
             {project && !showProject && (
-                <ProjectForm btnText="Salvar alterações" dataProject={project[0]} handleSubmit={editData} />
+                <ProjectForm btnText="Salvar alterações" dataProject={project} handleSubmit={editData} />
+            )}
+            {project && !showService && (
+                <ServiceForm btnText='Adicionar serviço' dataProject={project} handleAddService={createService}></ServiceForm>
             )}
             
 {/*             

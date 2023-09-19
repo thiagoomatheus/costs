@@ -1,8 +1,15 @@
 import { useState } from "react"
 import Input from "./Input"
 import { useNavigate } from "react-router-dom"
+import { ProjectType } from "./ProjectForm"
 
-function ServiceForm({ btnText, project, action }) {
+type Props = {
+    btnText: string,
+    dataProject: ProjectType,
+    handleAddService: (project: ProjectType) => void
+}
+
+function ServiceForm({ btnText, dataProject, handleAddService }: Props) {
 
     const [service, setService] = useState()
     const [cost, setCost] = useState()
@@ -11,7 +18,7 @@ function ServiceForm({ btnText, project, action }) {
     const navigate = useNavigate()
 
     let services = {
-        id: project.services.length + 1,
+        id: dataProject.services.length + 1,
         service: service,
         cost: cost,
         description: description
@@ -19,13 +26,13 @@ function ServiceForm({ btnText, project, action }) {
 
     function handleSubmit(e) {
         e.preventDefault()
-        if (parseFloat(project.budget) < parseFloat(project.cost) + parseFloat(services.cost)) {
+        if (parseFloat(dataProject.budget) < parseFloat(dataProject.cost) + parseFloat(dataProjectservices.cost)) {
             navigate(`/projects/${project.id}`, { state: { message: "Valor de serviços ultrapassaram o orçamento", type: "error" } })
             return
         }
-        const newCost = parseFloat(project.cost) + parseFloat(cost);
-        project.cost = newCost;
-        project.services.push(services)
+        const newCost = parseFloat(dataProject.cost) + parseFloat(cost);
+        dataProject.cost = newCost;
+        dataProject.services.push(services)
         action(project)
     }
 

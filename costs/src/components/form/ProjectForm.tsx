@@ -20,13 +20,14 @@ export type ProjectType = {
 type Props = {
     btnText: string,
     dataProject?: ProjectType,
+    id?: string,
     handleSubmit: (project: ProjectType) => void,
 }
 
-export default function ProjectForm({btnText, dataProject, handleSubmit}: Props) {
+export default function ProjectForm({btnText, dataProject, id, handleSubmit}: Props) {
 
     const [project, setProject] = useState<ProjectType>({
-        id: dataProject ? dataProject.id : uuid(),
+        id: dataProject ? dataProject.id : id ? id : '',
         name: dataProject ? dataProject.name : "",
         budget: dataProject ? dataProject.budget : 0,
         cost: dataProject ? dataProject.cost : 0,
@@ -57,7 +58,7 @@ export default function ProjectForm({btnText, dataProject, handleSubmit}: Props)
                     Orçamento do projeto:
                 </Input>
 
-                <Select nameHTML="category" defaultValue={project.category} handleChange={handleChange}>
+                <Select nameHTML="category" value={project.category} handleChange={handleChange}>
                     Selecione a categoria:
                 </Select>
 
