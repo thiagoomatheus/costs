@@ -1,7 +1,6 @@
 import { useLocation, useNavigate} from "react-router-dom"
 import { useState, useEffect, useContext } from "react"
-import { doc, getDoc } from "firebase/firestore"
-import { ProjectsContext, ProjectsData, SetProjectsContext, db } from "../App"
+import { ProjectsContext } from "../App"
 import MainTitleWithButton from "../components/layout/MainTitleWithButton"
 import Message from "../components/layout/Message"
 import Card from "../components/projects/Card"

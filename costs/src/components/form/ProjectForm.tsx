@@ -1,27 +1,13 @@
+import { ProjectType } from "../../App"
 import Input from "./Input"
 import Select from "./Select"
 import { useState } from "react"
-import uuid from "react-uuid"
-
-export type ProjectType = {
-    id: string,
-    name: string | undefined,
-    budget: number | undefined,
-    cost: number | undefined,
-    category: string | undefined,
-    services: {
-        id: number,
-        service: string,
-        cost: number,
-        description: string
-    }[] | undefined
-} 
 
 type Props = {
     btnText: string,
     dataProject?: ProjectType,
     id?: string,
-    handleSubmit: (project: ProjectType) => void,
+    handleSubmit: (project: ProjectType) => void
 }
 
 export default function ProjectForm({btnText, dataProject, id, handleSubmit}: Props) {

@@ -1,8 +1,7 @@
 import ButtonWithIcon from './ButtonWithIcon'
-import { doc, updateDoc, arrayRemove, deleteDoc, collection, query, where, getDoc, getDocs, collectionGroup } from "firebase/firestore";
+import { doc,deleteDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom"
-import { ProjectsContext, ProjectsData, SetProjectsContext } from '../../App'
-import { ProjectType } from '../form/ProjectForm'
+import { ProjectType, ProjectsContext, SetProjectsContext } from '../../App'
 import { db } from '../../App';
 import { useContext } from 'react';
 

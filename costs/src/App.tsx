@@ -11,7 +11,6 @@ import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firesto
 import Projects from "./pages/Projects";
 import ProjectId from "./pages/ProjectId";
 import { createContext, useState, useEffect } from "react";
-import { ProjectType } from "./components/form/ProjectForm";
 
 const app = initializeApp({
   apiKey: "AIzaSyCyGIgTSkafFGsVTBJCqbNFQVjpXJtw9Fg",
@@ -24,6 +23,21 @@ const app = initializeApp({
 
 export const db = getFirestore(app)
 
+export type ServiceType = {
+  id: string,
+  title: string,
+  cost: number,
+  description: string
+}
+export type ProjectType = {
+  id: string,
+  name: string | undefined,
+  budget: number | undefined,
+  cost: number | undefined,
+  category: string | undefined,
+  services: ServiceType[] |
+   undefined
+}
 export type ProjectsData = Array<ProjectType> | undefined
 export type Categories = {
   id: number,
@@ -31,12 +45,12 @@ export type Categories = {
 }[]
 
 export const CategoriesContext = createContext<Categories | undefined>(undefined)
-export const ProjectsContext = createContext<ProjectsData>(undefined)
-export const SetProjectsContext = createContext<React.Dispatch<React.SetStateAction<ProjectsData>>>(() => {})
+export const ProjectsContext = createContext<ProjectType[] | undefined>(undefined)
+export const SetProjectsContext = createContext<React.Dispatch<React.SetStateAction<ProjectType[] | undefined>>>(() => {})
 
 export default function App() {
 
-  const [projects, setProjects] = useState<ProjectsData>()
+  const [projects, setProjects] = useState<ProjectType[]>()
   const [categories, setCategories] = useState()
 
   useEffect(() => {  // Usando coleção com o id do usuário

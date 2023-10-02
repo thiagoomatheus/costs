@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import ProjectForm from "../components/form/ProjectForm"
-import { ProjectType } from "../components/form/ProjectForm"
+import { ProjectType } from "../App"
 import { doc, setDoc } from "firebase/firestore"
 import { ProjectsContext, SetProjectsContext, db } from "../App"
 import { useContext } from "react"

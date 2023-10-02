@@ -2,14 +2,13 @@ import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
 import MainTitleWithButton from "../components/layout/MainTitleWithButton"
 import Loading from "../components/layout/Loading"
-import ProjectForm, { ProjectType } from "../components/form/ProjectForm"
+import { ProjectType, ServiceType } from "../App"
 import ServiceForm from "../components/form/ServiceForm"
 import Message from "../components/layout/Message"
-import Styles from "./Projeto.module.css"
-import styleContainer from "../components/Projects/ProjectsOpen.module.css"
 import ServiceCard from "../components/layout/ServiceCard"
 import { ProjectsContext, SetProjectsContext, db } from "../App"
-import { doc, setDoc} from "firebase/firestore"
+import { arrayRemove, arrayUnion, doc, setDoc, updateDoc} from "firebase/firestore"
+import ProjectForm from "../components/form/ProjectForm"
 
 export default function ProjectId() {
 
@@ -21,10 +20,9 @@ export default function ProjectId() {
     const navigate = useNavigate()
     const { id } = useParams()
 
-    const [loading, setLoading] = useState(true)
     const [project, setProject] = useState<ProjectType>()
-    const [showProject, setShowProject] = useState(false)
-    const [showService, setShowService] = useState(false)
+    const [showSection, setShowSection] = useState<"loading" | "showData" | "editProject" | "createService" | "editService">("loading")
+    const [serviceData, setServiceData] = useState<ServiceType | undefined>(undefined)
 
     // Message
     let message = "";
@@ -62,27 +60,17 @@ export default function ProjectId() {
     useEffect(() => {
         if (projects !== undefined) {
             setProject(projects.filter((project) => project.id === id)[0])            
-            setLoading(false)
-            setShowProject(true)
-            setShowService(true)
+            setShowSection("showData")
         }
     },[projects])
-    
-    function changeProjectBtnText() {
-        setShowProject(!showProject)
-    }
-
-    function changeServiceBtnText() {
-        setShowService(!showService)
-    }
 
     // Action Form
 
     async function editData(project: ProjectType) {
-    //     if (project.cost > project.budget) {
-    //         navigate(`/projects`, { state: { message: "O orçamento não pode ser menor que o custo do projeto", type: "error" } })
-    //         return
-    //     }
+        // if (project.cost > project.budget) {
+        //     navigate(`/projects`, { state: { message: "O orçamento não pode ser menor que o custo do projeto", type: "error" } })
+        //     return
+        // }
 
     //     fetch(`http://localhost:5000/projects/${id}`, {
     //         method: "PATCH",
@@ -100,52 +88,92 @@ export default function ProjectId() {
     //     ).catch(
     //         (err) => console.log(err)
     //     )
-    try {
-        setDoc(doc(db, 'userId', project.id), project, {merge: true})
-        const newProjects = projects?.map(projectServer => {
-            if (projectServer.id !== id) {
-                return projectServer
-            } else {
-                return {
-                    id: project.id,
-                    name: project.name,
-                    budget: project.budget,
-                    cost: project.cost,
-                    category: project.category,
-                    services: project.services
+    if (project.cost !== undefined && project.budget) {
+        if (project.cost > project.budget) {
+            navigate(`/projects/${project.id}`, { state: { message: "O orçamento não pode ser menor que o custo do projeto", type: "error" } })
+            return
+        }
+        try {
+            setDoc(doc(db, 'userId', project.id), project, {merge: true})
+            const newProjects = projects?.map(projectServer => {
+                if (projectServer.id !== id) {
+                    return projectServer
+                } else {
+                    return {
+                        ...project
+                    }
                 }
+            })
+            setProject(project)
+            setProjects(newProjects)
+            navigate(`/projects/${project.id}`, { state: { message: "Projeto alterado com sucesso", type: "success" } })
+            setShowSection("showData")
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    }
+
+    async function createService(service: ServiceType) {
+
+        // fetch(`http://localhost:5000/projects/${id}`, {
+        //     method: "PATCH",
+        //     headers: {
+        //         "Content-type": "application/json",
+        //     },
+        //     body: JSON.stringify(project)
+        // }).then((resp) => resp.json()
+        // ).then(
+        //     (data) => {
+        //         setProjects(data);
+        //         navigate(`/projects/${id}`, { state: { message: "Serviço adicionado com sucesso", type: "success" } })
+        //         changeServiceBtnText()
+        //     }
+        // ).catch(
+        //     (err) => console.log(err)
+        // )
+        if (project && project.budget && project.cost !== undefined) {
+            if (project.budget < (project.cost + service.cost)) {
+                navigate(`/projects/${id}`, { state: { message: "Valor de serviços ultrapassaram o orçamento", type: "error" } })
+                return
             }
-        })
-        setProject(project)
-        setProjects(newProjects)
-        navigate(`/projects/${project.id}`, { state: { message: "Projeto alterado com sucesso", type: "success" } })
-        changeProjectBtnText()
-    } catch (error) {
-        console.log(error);
+            const newCost = project.cost + service.cost // está retornando string
+            try {
+                if (id) {
+                    const newProject: ProjectType = {
+                        id: id,
+                        name: project?.name,
+                        budget: project?.budget,
+                        cost: newCost,
+                        category: project?.category,
+                        services: [
+                            ...(project?.services !== undefined ? project.services : []),
+                            service
+                         ]
+                    }
+                    await setDoc(doc(db, 'userId', id), newProject, {merge: true})
+                    
+                    const newProjects = projects?.map(projectServer => {
+                        if (projectServer.id !== id) {
+                            return projectServer
+                        } else {
+                            return {
+                                ...newProject
+                    }}})
+                    setProject(newProject)
+                    setProjects(newProjects)
+                    navigate(`/projects/${id}`, { state: { message: "Projeto alterado com sucesso", type: "success" } })
+                    setShowSection("showData")
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        
+        
     }
-    }
 
-    function createService(project: ProjectType) {}
-
-    //     fetch(`http://localhost:5000/projects/${id}`, {
-    //         method: "PATCH",
-    //         headers: {
-    //             "Content-type": "application/json",
-    //         },
-    //         body: JSON.stringify(project)
-    //     }).then((resp) => resp.json()
-    //     ).then(
-    //         (data) => {
-    //             setProjects(data);
-    //             navigate(`/projects/${id}`, { state: { message: "Serviço adicionado com sucesso", type: "success" } })
-    //             changeServiceBtnText()
-    //         }
-    //     ).catch(
-    //         (err) => console.log(err)
-    //     )
-    // }
-
-    function removeService() {}
+    async function removeService(service: ServiceType) {
     //     const servicesUpdate = projects.services.filter((service) => service.id !== id)
     //     const projectUpdate = projects
     //     projectUpdate.services = servicesUpdate
@@ -166,106 +194,156 @@ export default function ProjectId() {
     //     ).catch(
     //         (err) => console.log(err)
     //     )
-    // }
+        try {
+            if (id) {
+                await updateDoc(doc(db, 'userId', id), {
+                    services: arrayRemove(service)
+                })
+                const newProject: ProjectType = {
+                    id: id,
+                    name: project?.name,
+                    budget: project?.budget,
+                    cost: project?.cost,
+                    category: project?.category,
+                    services: project?.services?.filter(serviceServer => serviceServer.id !== service.id)
+                }
+                const newProjects = projects?.map(projectServer => {
+                    if (projectServer.id !== id) {
+                        return projectServer
+                    } else {
+                        return {
+                            ...newProject
+                }}})
+                setProject(newProject)
+                setProjects(newProjects)
+                navigate(`/projects/${id}`, { state: { message: "Serviço excluido com sucesso", type: "error" } })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    function editService(service: ServiceType) {
+        setServiceData(service)
+        setShowSection("editService")
+    }
+
+    async function updateService(service:ServiceType) {
+        const newServices = project?.services?.map(serviceServer => {
+            if (serviceServer.id === service.id) {
+                return {
+                    ...service
+                }
+            } else {
+                return serviceServer
+            }
+        })
+        if (id) {
+            await updateDoc(doc(db, 'userId', id), {
+                services: newServices
+            })
+            const newProject: ProjectType = {
+                id: id,
+                name: project?.name,
+                budget: project?.budget,
+                cost: project?.cost,
+                category: project?.category,
+                services: newServices
+            }
+            const newProjects = projects?.map(projectServer => {
+                if (projectServer.id !== id) {
+                    return projectServer
+                } else {
+                    return {
+                        ...newProject
+            }}})
+            setProject(newProject)
+            setProjects(newProjects)
+        }
+        navigate(`/projects/${id}`, { state: { message: "Serviço alterado com sucesso", type: "success" } })   
+    }
 
     return (
-        <main className={Styles.main}>
-
-            {loading && <Loading />}
+        <main className="flex flex-col mx-10 gap-y-10">
+            {showSection === "loading" && <Loading />}
 
             {message && <Message msg={message} type={type} />}
 
             {project && (
-                <MainTitleWithButton to="" btnText={showProject ? "Editar projeto" : "Fechar"} handleClick={changeProjectBtnText}>
+                <MainTitleWithButton to="" btnText={showSection === "showData" ? "Editar projeto" : "Fechar"} handleClick={() => {
+                    if (showSection === "showData") {
+                        setShowSection("editProject")
+                        return
+                    }
+                    setShowSection("showData")
+                }}>
                     Projeto: {project.name}
                 </MainTitleWithButton>
             )}
-            {project && showProject && (
+
+            {project && showSection === "showData" && (
                 <>
-                    <div className={Styles.container}>
+                    <div className="flex flex-col gap-y-3 pb-8 border-b-2 border-black">
                         <p>
-                            <span>Categoria:</span> {project.category}
+                            <span className="font-bold">Categoria:</span> {project.category}
                         </p>
                         <p>
-                            <span>Total Orçamento:</span> R$ {project.budget}
+                            <span className="font-bold">Total Orçamento:</span> R$ {project.budget}
                         </p>
                         <p>
-                            <span>Total Utilizado:</span> R$ {project.cost}
+                            <span className="font-bold">Total Utilizado:</span> R$ {project.cost}
                         </p>
                     </div>
-                    <MainTitleWithButton to="" btnText={showService ? "Adicionar serviço" : "Fechar"} handleClick={changeServiceBtnText}>
+                    <MainTitleWithButton to="" btnText={showSection === "showData" ? "Adicionar serviço" : "Fechar"} handleClick={() => {
+                        if (showSection === "showData") {
+                            setShowSection("createService")
+                            return
+                        }
+                        setShowSection("showData")
+                    }}>
                         Serviços
                     </MainTitleWithButton>
-                    {project && project.services?.length ? (
-                        <div className={styleContainer.projectsContainer}>
-                            {project.services.map((service) => (
-                                    <ServiceCard service={service} handleRemove={removeService} key={id} />
-                                ))
-                            }
-                        </div>
-                    ) : (
-                        <p>Adicione um serviço</p>
-                    )}
-                </>
-            )}
-            {project && !showProject && (
-                <ProjectForm btnText="Salvar alterações" dataProject={project} handleSubmit={editData} />
-            )}
-            {project && !showService && (
-                <ServiceForm btnText='Adicionar serviço' dataProject={project} handleAddService={createService}></ServiceForm>
-            )}
-            
-{/*             
-
-            {loading ? <Loading /> : <MainTitleWithButton title={`Projeto: ${projects.name}`} btnText= action={changeProjectBtnText} />}
-
-            {showProject ? (
-                <>
-                    {showProject && (
+                    {project?.services && (
                         <>
-                            {message && <Message msg={message} type={type} />}
-                            <div className={Styles.container}>
-                                <p>
-                                    <span>Categoria:</span> {projects.category}
-                                </p>
-                                <p>
-                                    <span>Total Orçamento:</span> R$ {projects.budget}
-                                </p>
-                                <p>
-                                    <span>Total Utilizado:</span> R$ {projects.cost}
-                                </p>
+                            {project.services.length > 0 ? (
+                            <div className="flex flex-col gap-x-9 gap-y-10">
+                                {project.services?.map((service) => (
+                                        <ServiceCard service={service} handleRemove={removeService} key={service.id} handleEditService={editService} />
+                                    ))
+                                }
                             </div>
-                            <>
-                                <MainTitleWithButton title="Serviços" btnText={showService ? "Adicionar serviço" : "Fechar"} action={changeServiceBtnText} />
-                                {showService ? (
-                                    <>
-                                        {projects.services && (
-                                            <div className={styleContainer.projectsContainer}>
-                                                {projects.services.length ? (
-                                                    projects.services.map(() => (
-                                                        <ServiceCard project={services} handleRemove={removeService} key={id} />
-                                                    ))
-                                                ) : (
-                                                    <p>Adicione um serviço</p>
-                                                )}
-                                            </div>
-                                        )}
-                                    </>
-                                ) : (
-                                    <>
-                                        <ServiceForm project={projects} btnText="Adicionar serviço" action={createService} />
-                                    </>
-                                )}
-                            </>
+                        ) : (
+                            <p>Adicione um serviço</p>
+                        )}
                         </>
                     )}
                 </>
-            ) : (
-                <>
-                    <ProjectForm btnText="Salvar alterações" action={editData} project={projects} />
-                </>
-            )} */}
+            )}
 
+            {project && showSection === "editProject" && (
+                <ProjectForm btnText="Salvar alterações" dataProject={project} handleSubmit={editData} />
+            )}
+
+            {project && showSection === "createService" && (
+                <>
+                    <div className="flex flex-col gap-y-3 pb-8 border-b-2 border-black">
+                        <p>
+                            <span className="font-bold">Categoria:</span> {project.category}
+                        </p>
+                        <p>
+                            <span className="font-bold">Total Orçamento:</span> R$ {project.budget}
+                        </p>
+                        <p>
+                            <span className="font-bold">Total Utilizado:</span> R$ {project.cost}
+                        </p>
+                    </div>
+                    <ServiceForm btnText='Adicionar serviço' handleSubmit={createService} />
+                </>
+            )}
+
+            {showSection === "editService" && (
+                <ServiceForm btnText="Salvar alterações" serviceData={serviceData} handleSubmit={updateService} />
+            )}
         </main>
     )
 }

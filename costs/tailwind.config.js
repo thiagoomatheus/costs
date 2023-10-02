@@ -8,6 +8,9 @@ export default {
     extend: {
       colors: {
         orange: "orange",
+      },
+      gridTemplateColumns: {
+        "serviceCard": '1.2fr 1fr 2.5fr 0.2fr 0.2fr' 
       }
     },
   },
