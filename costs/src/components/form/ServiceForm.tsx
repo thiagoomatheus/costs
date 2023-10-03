@@ -18,18 +18,6 @@ export default function ServiceForm({ btnText, serviceData, handleSubmit }: Prop
         description: serviceData ? serviceData.description : ''
     })
 
-    // async function handleSubmit(e: React.FormEvent) {
-    //     e.preventDefault()
-        // if (parseFloat(dataProject.budget) < parseFloat(dataProject.cost) + parseFloat(dataProjectservices.cost)) {
-        //     navigate(`/projects/${project.id}`, { state: { message: "Valor de serviços ultrapassaram o orçamento", type: "error" } })
-        //     return
-        // }
-        // const newCost = parseFloat(dataProject.cost) + parseFloat(cost);
-        // dataProject.cost = newCost;
-    //     dataProject.services.push(services)
-    //     handleAddService(project)
-    // }
-
     function handleChange(e:React.ChangeEvent) {
         const target = e.target as HTMLInputElement;
         setService({

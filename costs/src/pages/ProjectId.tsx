@@ -136,26 +136,6 @@ export default function ProjectId() {
     }
 
     async function removeService(service: ServiceType) {
-    //     const servicesUpdate = projects.services.filter((service) => service.id !== id)
-    //     const projectUpdate = projects
-    //     projectUpdate.services = servicesUpdate
-    //     projectUpdate.cost = parseFloat(projectUpdate.cost) - parseFloat(cost)
-        
-    //     fetch(`http://localhost:5000/projects/${projectUpdate.id}`, {
-    //         method: "PATCH",
-    //         headers: {
-    //             "Content-type": "application/json",
-    //         },
-    //         body: JSON.stringify(projectUpdate)
-    //     }).then((resp) => resp.json()
-    //     ).then(
-    //         () => {
-    //             setProjects(projectUpdate);
-    //             navigate(`/projects/${projectUpdate.id}`, { state: { message: "Serviço removido com sucesso", type: "error" } })
-    //         }
-    //     ).catch(
-    //         (err) => console.log(err)
-    //     )
         try {
             if (id && project?.cost) {
                 const newCost = project?.cost - service.cost
@@ -189,14 +169,14 @@ export default function ProjectId() {
         setShowSection("editService")
     }
 
-    async function updateService(service:ServiceType) { // Passar verificação para formulário - erro valor ultrapassdo quando valor está perto do limite
+    async function updateService(service:ServiceType) {
         if (project && project.budget && project.cost !== undefined && typeof service.cost === "string") {
-            if (project.budget < (project.cost + parseFloat(service.cost))) {
+            const previousCostService = project.services?.filter(serviceServer => serviceServer.id === service.id)
+            const newCost = (project.cost - (previousCostService ? previousCostService[0].cost : 0)) + (parseFloat(service.cost))
+            if (project.budget < newCost) {
                 navigate(`/projects/${id}`, { state: { message: "Valor de serviços ultrapassaram o orçamento", type: "error" } })
                 return
             }
-            const previousCostService = project.services?.filter(serviceServer => serviceServer.id === service.id)
-            const newCost = (project.cost - (previousCostService ? previousCostService[0].cost : 0)) + (parseFloat(service.cost))
             try {
                 if (id) {
                     const newProject: ProjectType = {
