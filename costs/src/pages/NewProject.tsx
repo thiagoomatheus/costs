@@ -9,29 +9,11 @@ import uuid from "react-uuid"
 
 export default function NewProject() {
     const projects = useContext(ProjectsContext)
-    const setProject = useContext(SetProjectsContext)
+    const setProjects = useContext(SetProjectsContext)
 
     const id = uuid()
 
     const navigate = useNavigate()
-
-    // function postData(project: ProjectType) {
-
-    //     fetch("http://localhost:5000/projects", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-type": "application/json",
-    //         },
-    //         body: JSON.stringify(project)
-    //     }).then(
-    //         (data) => {
-    //             console.log(data);
-    //             navigate("/projects", {state: {message: "Projeto criado com sucesso", type: "success"}})
-    //         } 
-    //     ).catch(
-    //         (err) => console.log(err)
-    //     )
-    // }
 
     // function postData() { // Post com localStorage - Funcionando muito bem!
 
@@ -63,43 +45,32 @@ export default function NewProject() {
     //     }
     // }
 
-    async function testeComCollection(project: ProjectType) { // Melhor opção
-        try {
-            setDoc(doc(db, 'userId', id), project, {merge: true})
-            projects?.push(project)
-            setProject(projects)
-            navigate("/projects", {state: {message: "Projeto criado com sucesso", type: "success"}})
-        } catch (error) {
-            console.log(error);
+    async function postData(project: ProjectType) { // Melhor opção
+        if (typeof project.budget === "string") {
+            const data = {
+                id: project.id,
+                name: project.name,
+                budget: parseFloat(project.budget),
+                cost: project.cost,
+                category: project.category,
+                services: project.services
+            }
+            try {
+                setDoc(doc(db, 'userId', id), data, {merge: true})
+                projects?.push(data)
+                setProjects(projects)
+                navigate("/projects", {state: {message: "Projeto criado com sucesso", type: "success"}})
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
-
-    // async function testeComSubCollections(project:ProjectType) {
-    //     await setDoc(doc(db, 'users', '6bbQnvJI1fevlS17kF7aJVgb4UU2', 'projects', id), project) 
-    //     projects?.push(project)
-    //     setProject(projects)
-    //     navigate("/projects", {state: {message: "Projeto criado com sucesso", type: "success"}}) 
-    // }
-
-    // async function postData(project: ProjectType) {
-    //     const docRef = doc(db, "projects", "3lMligpcZ07hUbWgKvrD");
-    //     try {
-    //         await updateDoc(docRef, {
-    //             projects: arrayUnion(project)
-    //         })
-    //         projects?.push(project)
-    //         setProject(projects)
-    //         navigate("/projects", {state: {message: "Projeto criado com sucesso", type: "success"}})  
-    //     } catch (error) {
-    //         console.log(error);
-    //     } 
-    // }
 
     return (
         <main className="flex flex-col w-80 mx-auto">
             <h1 className="text-5xl font-bold">Criar projeto</h1>
             <p className="my-5">Crie seu projeto para depois adicionar os serviços</p>
-            <ProjectForm btnText="Criar projeto" id={id} handleSubmit={testeComCollection}/>
+            <ProjectForm btnText="Criar projeto" id={id} handleSubmit={postData}/>
         </main>
     )
 }

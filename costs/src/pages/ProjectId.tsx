@@ -7,7 +7,7 @@ import ServiceForm from "../components/form/ServiceForm"
 import Message from "../components/layout/Message"
 import ServiceCard from "../components/layout/ServiceCard"
 import { ProjectsContext, SetProjectsContext, db } from "../App"
-import { arrayRemove, arrayUnion, doc, setDoc, updateDoc} from "firebase/firestore"
+import { arrayRemove, doc, setDoc, updateDoc} from "firebase/firestore"
 import ProjectForm from "../components/form/ProjectForm"
 
 export default function ProjectId() {
@@ -43,20 +43,6 @@ export default function ProjectId() {
         }
     })
 
-    // Functions
-
-    // useEffect(() => {
-    //     fetch(`http://localhost:5000/projects/${id}`)
-    //         .then((resp) => resp.json())
-    //         .then((data) => {
-    //             setProjects(data)
-    //             setLoading(false)
-    //             setShowProject(true)
-    //             setShowService(true)
-    //         })
-    //         .catch((err) => console.log(err))
-    // }, [id])
-
     useEffect(() => {
         if (projects !== undefined) {
             setProject(projects.filter((project) => project.id === id)[0])            
@@ -67,77 +53,50 @@ export default function ProjectId() {
     // Action Form
 
     async function editData(project: ProjectType) {
-        // if (project.cost > project.budget) {
-        //     navigate(`/projects`, { state: { message: "O orçamento não pode ser menor que o custo do projeto", type: "error" } })
-        //     return
-        // }
 
-    //     fetch(`http://localhost:5000/projects/${id}`, {
-    //         method: "PATCH",
-    //         headers: {
-    //             "Content-type": "application/json",
-    //         },
-    //         body: JSON.stringify(project)
-    //     }).then((resp) => resp.json()
-    //     ).then(
-    //         (data) => {
-    //             setProjects(data);
-    //             navigate(`/projects/${id}`, { state: { message: "Projeto alterado com sucesso", type: "success" } })
-    //             changeProjectBtnText()
-    //         }
-    //     ).catch(
-    //         (err) => console.log(err)
-    //     )
     if (project.cost !== undefined && project.budget) {
         if (project.cost > project.budget) {
             navigate(`/projects/${project.id}`, { state: { message: "O orçamento não pode ser menor que o custo do projeto", type: "error" } })
             return
         }
-        try {
-            setDoc(doc(db, 'userId', project.id), project, {merge: true})
-            const newProjects = projects?.map(projectServer => {
-                if (projectServer.id !== id) {
-                    return projectServer
-                } else {
-                    return {
-                        ...project
+        if (typeof project.budget === "string") {
+            const data = {
+                id: project.id,
+                name: project.name,
+                budget: parseFloat(project.budget),
+                cost: project.cost,
+                category: project.category,
+                services: project.services
+            }
+            try {
+                setDoc(doc(db, 'userId', project.id), data, {merge: true})
+                const newProjects = projects?.map(projectServer => {
+                    if (projectServer.id !== id) {
+                        return projectServer
+                    } else {
+                        return {
+                            ...project
+                        }
                     }
-                }
-            })
-            setProject(project)
-            setProjects(newProjects)
-            navigate(`/projects/${project.id}`, { state: { message: "Projeto alterado com sucesso", type: "success" } })
-            setShowSection("showData")
-        } catch (error) {
-            console.log(error);
+                })
+                setProject(project)
+                setProjects(newProjects)
+                navigate(`/projects/${project.id}`, { state: { message: "Projeto alterado com sucesso", type: "success" } })
+                setShowSection("showData")
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
     }
 
     async function createService(service: ServiceType) {
-
-        // fetch(`http://localhost:5000/projects/${id}`, {
-        //     method: "PATCH",
-        //     headers: {
-        //         "Content-type": "application/json",
-        //     },
-        //     body: JSON.stringify(project)
-        // }).then((resp) => resp.json()
-        // ).then(
-        //     (data) => {
-        //         setProjects(data);
-        //         navigate(`/projects/${id}`, { state: { message: "Serviço adicionado com sucesso", type: "success" } })
-        //         changeServiceBtnText()
-        //     }
-        // ).catch(
-        //     (err) => console.log(err)
-        // )
-        if (project && project.budget && project.cost !== undefined) {
-            if (project.budget < (project.cost + service.cost)) {
+        if (project && project.budget && project.cost !== undefined && typeof service.cost === "string") {
+            if (project.budget < (project.cost + parseFloat(service.cost))) {
                 navigate(`/projects/${id}`, { state: { message: "Valor de serviços ultrapassaram o orçamento", type: "error" } })
                 return
             }
-            const newCost = project.cost + service.cost // está retornando string
+            const newCost = project.cost + parseFloat(service.cost)
             try {
                 if (id) {
                     const newProject: ProjectType = {
@@ -148,7 +107,10 @@ export default function ProjectId() {
                         category: project?.category,
                         services: [
                             ...(project?.services !== undefined ? project.services : []),
-                            service
+                            {
+                                ...service,
+                                cost: parseFloat(service.cost)
+                            }
                          ]
                     }
                     await setDoc(doc(db, 'userId', id), newProject, {merge: true})
@@ -195,18 +157,17 @@ export default function ProjectId() {
     //         (err) => console.log(err)
     //     )
         try {
-            if (id) {
-                await updateDoc(doc(db, 'userId', id), {
-                    services: arrayRemove(service)
-                })
+            if (id && project?.cost) {
+                const newCost = project?.cost - service.cost
                 const newProject: ProjectType = {
                     id: id,
                     name: project?.name,
                     budget: project?.budget,
-                    cost: project?.cost,
+                    cost: newCost,
                     category: project?.category,
                     services: project?.services?.filter(serviceServer => serviceServer.id !== service.id)
                 }
+                await setDoc(doc(db, 'userId', id), newProject, {merge: true})
                 const newProjects = projects?.map(projectServer => {
                     if (projectServer.id !== id) {
                         return projectServer
@@ -228,39 +189,51 @@ export default function ProjectId() {
         setShowSection("editService")
     }
 
-    async function updateService(service:ServiceType) {
-        const newServices = project?.services?.map(serviceServer => {
-            if (serviceServer.id === service.id) {
-                return {
-                    ...service
+    async function updateService(service:ServiceType) { // Passar verificação para formulário - erro valor ultrapassdo quando valor está perto do limite
+        if (project && project.budget && project.cost !== undefined && typeof service.cost === "string") {
+            if (project.budget < (project.cost + parseFloat(service.cost))) {
+                navigate(`/projects/${id}`, { state: { message: "Valor de serviços ultrapassaram o orçamento", type: "error" } })
+                return
+            }
+            const previousCostService = project.services?.filter(serviceServer => serviceServer.id === service.id)
+            const newCost = (project.cost - (previousCostService ? previousCostService[0].cost : 0)) + (parseFloat(service.cost))
+            try {
+                if (id) {
+                    const newProject: ProjectType = {
+                        id: id,
+                        name: project?.name,
+                        budget: project?.budget,
+                        cost: newCost,
+                        category: project?.category,
+                        services: project?.services?.map(serviceServer => {
+                            if (serviceServer.id === service.id && typeof service.cost === "string") {
+                                return {
+                                    ...service,
+                                    cost: parseFloat(service.cost)
+                                }
+                            } else {
+                                return serviceServer
+                            }
+                        })
+                    }
+                    await setDoc(doc(db, 'userId', id), newProject, {merge: true})
+                    
+                    const newProjects = projects?.map(projectServer => {
+                        if (projectServer.id !== id) {
+                            return projectServer
+                        } else {
+                            return {
+                                ...newProject
+                    }}})
+                    setProject(newProject)
+                    setProjects(newProjects)
+                    navigate(`/projects/${id}`, { state: { message: "Serviço alterado com sucesso", type: "success" } })
+                    setShowSection("showData")
                 }
-            } else {
-                return serviceServer
+            } catch (error) {
+                console.log(error);
             }
-        })
-        if (id) {
-            await updateDoc(doc(db, 'userId', id), {
-                services: newServices
-            })
-            const newProject: ProjectType = {
-                id: id,
-                name: project?.name,
-                budget: project?.budget,
-                cost: project?.cost,
-                category: project?.category,
-                services: newServices
-            }
-            const newProjects = projects?.map(projectServer => {
-                if (projectServer.id !== id) {
-                    return projectServer
-                } else {
-                    return {
-                        ...newProject
-            }}})
-            setProject(newProject)
-            setProjects(newProjects)
         }
-        navigate(`/projects/${id}`, { state: { message: "Serviço alterado com sucesso", type: "success" } })   
     }
 
     return (
