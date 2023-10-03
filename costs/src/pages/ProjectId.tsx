@@ -2,18 +2,19 @@ import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
 import MainTitleWithButton from "../components/layout/MainTitleWithButton"
 import Loading from "../components/layout/Loading"
-import { ProjectType, ServiceType } from "../App"
+import { ProjectType, ServiceType, UserContext } from "../App"
 import ServiceForm from "../components/form/ServiceForm"
 import Message from "../components/layout/Message"
 import ServiceCard from "../components/layout/ServiceCard"
 import { ProjectsContext, SetProjectsContext, db } from "../App"
-import { arrayRemove, doc, setDoc, updateDoc} from "firebase/firestore"
+import { doc, setDoc } from "firebase/firestore"
 import ProjectForm from "../components/form/ProjectForm"
 
 export default function ProjectId() {
 
     const projects = useContext(ProjectsContext)
     const setProjects = useContext(SetProjectsContext)
+    const uid = useContext(UserContext)
 
     // Hooks
     const location = useLocation()
@@ -41,7 +42,7 @@ export default function ProjectId() {
 
             return () => clearTimeout(timer)
         }
-    })
+    },[project])
 
     useEffect(() => {
         if (projects !== undefined) {
@@ -54,7 +55,7 @@ export default function ProjectId() {
 
     async function editData(project: ProjectType) {
 
-    if (project.cost !== undefined && project.budget) {
+    if (project.cost !== undefined && project.budget && uid) {
         if (project.cost > project.budget) {
             navigate(`/projects/${project.id}`, { state: { message: "O orçamento não pode ser menor que o custo do projeto", type: "error" } })
             return
@@ -69,7 +70,7 @@ export default function ProjectId() {
                 services: project.services
             }
             try {
-                setDoc(doc(db, 'userId', project.id), data, {merge: true})
+                setDoc(doc(db, uid, project.id), data, {merge: true})
                 const newProjects = projects?.map(projectServer => {
                     if (projectServer.id !== id) {
                         return projectServer
@@ -98,7 +99,7 @@ export default function ProjectId() {
             }
             const newCost = project.cost + parseFloat(service.cost)
             try {
-                if (id) {
+                if (id && uid) {
                     const newProject: ProjectType = {
                         id: id,
                         name: project?.name,
@@ -113,7 +114,7 @@ export default function ProjectId() {
                             }
                          ]
                     }
-                    await setDoc(doc(db, 'userId', id), newProject, {merge: true})
+                    await setDoc(doc(db, uid, id), newProject, {merge: true})
                     
                     const newProjects = projects?.map(projectServer => {
                         if (projectServer.id !== id) {
@@ -137,7 +138,7 @@ export default function ProjectId() {
 
     async function removeService(service: ServiceType) {
         try {
-            if (id && project?.cost) {
+            if (id && project?.cost && uid) {
                 const newCost = project?.cost - service.cost
                 const newProject: ProjectType = {
                     id: id,
@@ -147,7 +148,7 @@ export default function ProjectId() {
                     category: project?.category,
                     services: project?.services?.filter(serviceServer => serviceServer.id !== service.id)
                 }
-                await setDoc(doc(db, 'userId', id), newProject, {merge: true})
+                await setDoc(doc(db, uid, id), newProject, {merge: true})
                 const newProjects = projects?.map(projectServer => {
                     if (projectServer.id !== id) {
                         return projectServer
@@ -178,7 +179,7 @@ export default function ProjectId() {
                 return
             }
             try {
-                if (id) {
+                if (id && uid) {
                     const newProject: ProjectType = {
                         id: id,
                         name: project?.name,
@@ -196,7 +197,7 @@ export default function ProjectId() {
                             }
                         })
                     }
-                    await setDoc(doc(db, 'userId', id), newProject, {merge: true})
+                    await setDoc(doc(db, uid, id), newProject, {merge: true})
                     
                     const newProjects = projects?.map(projectServer => {
                         if (projectServer.id !== id) {

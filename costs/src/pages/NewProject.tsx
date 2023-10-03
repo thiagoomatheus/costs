@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import ProjectForm from "../components/form/ProjectForm"
-import { ProjectType } from "../App"
+import { ProjectType, UserContext } from "../App"
 import { doc, setDoc } from "firebase/firestore"
 import { ProjectsContext, SetProjectsContext, db } from "../App"
 import { useContext } from "react"
@@ -10,6 +10,7 @@ import uuid from "react-uuid"
 export default function NewProject() {
     const projects = useContext(ProjectsContext)
     const setProjects = useContext(SetProjectsContext)
+    const uid = useContext(UserContext)
 
     const id = uuid()
 
@@ -56,10 +57,12 @@ export default function NewProject() {
                 services: project.services
             }
             try {
-                setDoc(doc(db, 'userId', id), data, {merge: true})
-                projects?.push(data)
-                setProjects(projects)
-                navigate("/projects", {state: {message: "Projeto criado com sucesso", type: "success"}})
+                if (uid) {
+                    setDoc(doc(db, uid, id), data, {merge: true})
+                    projects?.push(data)
+                    setProjects(projects)
+                    navigate("/projects", {state: {message: "Projeto criado com sucesso", type: "success"}})
+                }
             } catch (error) {
                 console.log(error);
             }

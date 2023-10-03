@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Home from './pages/Home';
 import Contato from './pages/Contato'
 import Empresa from './pages/Empresa'
@@ -11,6 +11,8 @@ import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firesto
 import Projects from "./pages/Projects";
 import ProjectId from "./pages/ProjectId";
 import { createContext, useState, useEffect } from "react";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const app = initializeApp({
   apiKey: "AIzaSyCyGIgTSkafFGsVTBJCqbNFQVjpXJtw9Fg",
@@ -47,16 +49,22 @@ export type Categories = {
 export const CategoriesContext = createContext<Categories | undefined>(undefined)
 export const ProjectsContext = createContext<ProjectType[] | undefined>(undefined)
 export const SetProjectsContext = createContext<React.Dispatch<React.SetStateAction<ProjectType[] | undefined>>>(() => {})
+export const UserContext = createContext<string | undefined>(undefined)
 
 export default function App() {
 
   const [projects, setProjects] = useState<ProjectType[]>()
   const [categories, setCategories] = useState()
+  const [uid, setUid] = useState<string | undefined>()
+
+  function getUserId(uid: string) {
+    setUid(uid)
+  }
 
   useEffect(() => {  // Usando coleção com o id do usuário
     const data: any = [];
     const getData = async () => {
-        const r = await getDocs(collection(db, 'userId'))
+        const r = await getDocs(collection(db, (uid ? uid : "")))
         try {
           r.forEach((doc) => {
             data?.push(doc.data())
@@ -64,10 +72,8 @@ export default function App() {
           setProjects(data)
         } catch (error) {
           console.log(error);
-        }
-        
+        } 
     }
-
     const getCategories = async () => {
       const r = await getDoc(doc(db, 'content', 'categories'))
       try {
@@ -77,48 +83,35 @@ export default function App() {
       } catch (error) {
         console.log(error);
       }
-      
     }
     getCategories()
     getData()
-  },[])
-
-  // useEffect(() => {
-  //   const data: any = []
-  //   const querySnapshot = async () => { // Usando subcoleção 
-  //     const response = await getDocs(collection(db, "users", "6bbQnvJI1fevlS17kF7aJVgb4UU2", "projects"))
-  //     try {
-  //       response.forEach((doc) => {
-  //         data?.push(doc.data())
-  //       })
-  //       setProjects(data)
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //   querySnapshot()
-  // },[])
+  },[uid])
 
   return (
-    <Router>
-      <Header />
-      <Container>
-        <ProjectsContext.Provider value={projects}>
-          <SetProjectsContext.Provider value={setProjects}>
-            <CategoriesContext.Provider value={categories}>
-              <Routes>
-                  <Route path='/' element={ <Home />} />
-                  <Route path='/projects' element={ <Projects />} />
-                  <Route path='/projects/:id' element={ <ProjectId />} />
-                  <Route path='/company' element={ <Empresa />} />
-                  <Route path='/contact' element={ <Contato />} />
-                  <Route path='/newproject' element={ <NewProject />} />
-              </Routes>
-            </CategoriesContext.Provider>
-          </SetProjectsContext.Provider>
-        </ProjectsContext.Provider>
-      </Container>
-      <Footer />
-    </Router>
+    <UserContext.Provider value={uid}>
+      <Router>
+        <Header />
+        <Container>
+          <ProjectsContext.Provider value={projects}>
+            <SetProjectsContext.Provider value={setProjects}>
+              <CategoriesContext.Provider value={categories}>
+                <Routes>
+                    <Route path='/' element={ <Home />} />
+                    <Route path='/projects' element={ <Projects />} />
+                    <Route path='/projects/:id' element={ <ProjectId />} />
+                    <Route path='/company' element={ <Empresa />} />
+                    <Route path='/contact' element={ <Contato />} />
+                    <Route path='/login' element={ <Login getUserId={getUserId} />} />
+                    <Route path='/newproject' element={ <NewProject />} />
+                    <Route path='/register' element={ <Register getUserId={getUserId} />} />
+                </Routes>
+              </CategoriesContext.Provider>
+            </SetProjectsContext.Provider>
+          </ProjectsContext.Provider>
+        </Container>
+        <Footer />
+      </Router>
+    </UserContext.Provider>  
   )
 }
