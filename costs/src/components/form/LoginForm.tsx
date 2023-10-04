@@ -24,6 +24,7 @@ export default function LoginForm({handleSubmit, btnText}: Props) {
             [target.name]: target.value
         })
     }
+    
     return (
         <form className="flex flex-col w-2/5 m-auto gap-y-6" onSubmit={(e: React.FormEvent) => {
             e.preventDefault()
