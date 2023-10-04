@@ -2,12 +2,11 @@ import { useNavigate } from "react-router-dom";
 import LoginForm, { UserType } from "../components/form/LoginForm";
 import MainTitleWithButton from "../components/layout/MainTitleWithButton";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { SetUserContext } from "../App";
+import { useContext } from "react"
 
-type Props = {
-    getUserId: (uid: string) => void
-}
-
-export default function Register({getUserId}: Props) {
+export default function Register() {
+    const setUid = useContext(SetUserContext)
     const navigate = useNavigate()
 
     function handleRegister(user: UserType) {
@@ -17,7 +16,7 @@ export default function Register({getUserId}: Props) {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                getUserId(user.uid)
+                setUid(user.uid)
                 sessionStorage.setItem("uid", user.uid)
                 navigate("/projects")
             })

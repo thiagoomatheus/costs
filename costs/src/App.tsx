@@ -50,6 +50,7 @@ export const CategoriesContext = createContext<Categories | undefined>(undefined
 export const ProjectsContext = createContext<ProjectType[] | undefined>(undefined)
 export const SetProjectsContext = createContext<React.Dispatch<React.SetStateAction<ProjectType[] | undefined>>>(() => {})
 export const UserContext = createContext<string | undefined>(undefined)
+export const SetUserContext = createContext<React.Dispatch<React.SetStateAction<string | undefined>>>(() => {})
 
 export default function App() {
 
@@ -64,13 +65,14 @@ export default function App() {
   useEffect(() => {  // Usando coleção com o id do usuário
     const data: any = [];
     const getData = async () => {
-        const r = await getDocs(collection(db, (uid ? uid : "")))
         try {
+          const r = await getDocs(collection(db, (uid ? uid : "")))
           r.forEach((doc) => {
             data?.push(doc.data())
           })
           setProjects(data)
         } catch (error) {
+          setProjects(undefined)
           console.log(error);
         } 
     }
@@ -90,28 +92,30 @@ export default function App() {
 
   return (
     <UserContext.Provider value={uid}>
-      <Router>
-        <Header />
-        <Container>
-          <ProjectsContext.Provider value={projects}>
-            <SetProjectsContext.Provider value={setProjects}>
-              <CategoriesContext.Provider value={categories}>
-                <Routes>
-                    <Route path='/' element={ <Home />} />
-                    <Route path='/projects' element={ <Projects />} />
-                    <Route path='/projects/:id' element={ <ProjectId />} />
-                    <Route path='/company' element={ <Empresa />} />
-                    <Route path='/contact' element={ <Contato />} />
-                    <Route path='/login' element={ <Login getUserId={getUserId} />} />
-                    <Route path='/newproject' element={ <NewProject />} />
-                    <Route path='/register' element={ <Register getUserId={getUserId} />} />
-                </Routes>
-              </CategoriesContext.Provider>
-            </SetProjectsContext.Provider>
-          </ProjectsContext.Provider>
-        </Container>
-        <Footer />
-      </Router>
+      <SetUserContext.Provider value={setUid}>
+        <Router>
+          <Header />
+          <Container>
+            <ProjectsContext.Provider value={projects}>
+              <SetProjectsContext.Provider value={setProjects}>
+                <CategoriesContext.Provider value={categories}>
+                  <Routes>
+                      <Route path='/' element={ <Home />} />
+                      <Route path='/projects' element={ <Projects />} />
+                      <Route path='/projects/:id' element={ <ProjectId />} />
+                      <Route path='/company' element={ <Empresa />} />
+                      <Route path='/contact' element={ <Contato />} />
+                      <Route path='/login' element={ <Login />} />
+                      <Route path='/newproject' element={ <NewProject />} />
+                      <Route path='/register' element={ <Register />} />
+                  </Routes>
+                </CategoriesContext.Provider>
+              </SetProjectsContext.Provider>
+            </ProjectsContext.Provider>
+          </Container>
+          <Footer />
+        </Router>
+      </SetUserContext.Provider>  
     </UserContext.Provider>  
   )
 }

@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import MainTitleWithButton from "../components/layout/MainTitleWithButton";
 import Message from "../components/layout/Message";
 import LoginForm, { UserType } from "../components/form/LoginForm";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
+import { SetUserContext} from "../App";
 
 const provider = new GoogleAuthProvider();
 
-type Props = {
-    getUserId: (uid: string) => void
-}
-
-export default function Login({getUserId}: Props) {
-
+export default function Login() {
+    const setUid = useContext(SetUserContext)
     const navigate = useNavigate()
 
     // Message
@@ -37,9 +34,9 @@ export default function Login({getUserId}: Props) {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                getUserId(user.uid)
+                setUid(user.uid)
                 sessionStorage.setItem("uid", user.uid)
-                navigate("/projects")
+                navigate("/projects", {state: {message: "Login realizado com sucesso", type: "success"}})
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -54,10 +51,9 @@ export default function Login({getUserId}: Props) {
         signInWithPopup(auth, provider)
         .then((result) => {
             const user = result.user;
-            setMessage("Login realizado com sucesso")
-            getUserId(user.uid)
+            setUid(user.uid)
             sessionStorage.setItem("uid", user.uid)
-            navigate("/projects")
+            navigate("/projects", {state: {message: "Login realizado com sucesso", type: "success"}})
         }).catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
