@@ -1,7 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
-import Contato from './pages/Contato'
-import Empresa from './pages/Empresa'
 import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
 import NewProject from './pages/NewProject';
@@ -58,10 +56,6 @@ export default function App() {
   const [categories, setCategories] = useState()
   const [uid, setUid] = useState<string | undefined>()
 
-  function getUserId(uid: string) {
-    setUid(uid)
-  }
-
   useEffect(() => {  // Usando coleção com o id do usuário
     const data: any = [];
     const getData = async () => {
@@ -103,8 +97,6 @@ export default function App() {
                       <Route path='/' element={ <Home />} />
                       <Route path='/projects' element={ <Projects />} />
                       <Route path='/projects/:id' element={ <ProjectId />} />
-                      <Route path='/company' element={ <Empresa />} />
-                      <Route path='/contact' element={ <Contato />} />
                       <Route path='/login' element={ <Login />} />
                       <Route path='/newproject' element={ <NewProject />} />
                       <Route path='/register' element={ <Register />} />

@@ -35,7 +35,6 @@ export default function Login() {
                 // Signed in 
                 const user = userCredential.user;
                 setUid(user.uid)
-                sessionStorage.setItem("uid", user.uid)
                 navigate("/projects", {state: {message: "Login realizado com sucesso", type: "success"}})
             })
             .catch((error) => {
@@ -52,7 +51,6 @@ export default function Login() {
         .then((result) => {
             const user = result.user;
             setUid(user.uid)
-            sessionStorage.setItem("uid", user.uid)
             navigate("/projects", {state: {message: "Login realizado com sucesso", type: "success"}})
         }).catch((error) => {
             const errorCode = error.code;

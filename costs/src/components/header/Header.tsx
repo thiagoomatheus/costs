@@ -16,8 +16,7 @@ import { getAuth, signOut } from "firebase/auth";
             <Navbar>
                 <li><Link className="hover:text-[#fb3] duration-500" to='/'>Home</Link></li>
                 <li><Link className="hover:text-[#fb3] duration-500" to='/projects'>Projetos</Link></li>
-                <li><Link className="hover:text-[#fb3] duration-500" to='/company'>Empresa</Link></li>
-                <li><Link className="hover:text-[#fb3] duration-500" to='/contact'>Contato</Link></li>
+                <li><Link className="hover:text-[#fb3] duration-500" to='/register'>Cadastre-se</Link></li>
                 {!uid && (
                     <li><Link className="hover:text-[#fb3] duration-500" to='/login'>Login</Link></li>
                 )}
