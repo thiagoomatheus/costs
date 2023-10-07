@@ -53,10 +53,10 @@ export default function Register() {
     }
 
     return (
-        <main className="flex flex-col mx-10 gap-y-10">
+        <main className="flex flex-col mx-5 md:px-20 gap-y-10">
             {message && <Message msg={message} type={type} />}
             <MainTitleWithButton to="/login" btnText="Login">
-                Cadastre-se
+                Crie Sua Conta
             </MainTitleWithButton>
             <p>Com seu cadastro ativo você consegue acessar seus projetos de qualquer lugar! Cadastre-se preenchendo os campos abaixo.</p>
             <LoginForm btnText="Cadastrar" handleSubmit={handleRegister} />

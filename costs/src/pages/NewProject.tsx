@@ -70,7 +70,7 @@ export default function NewProject() {
     }
 
     return (
-        <main className="flex flex-col w-80 mx-auto">
+        <main className="flex flex-col sm:w-4/5 md:w-2/5 mx-5 sm:mx-auto">  
             <h1 className="text-5xl font-bold">Criar projeto</h1>
             <p className="my-5">Crie seu projeto para depois adicionar os serviços</p>
             <ProjectForm btnText="Criar projeto" id={id} handleSubmit={postData}/>

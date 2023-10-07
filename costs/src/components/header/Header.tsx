@@ -11,14 +11,14 @@ import { getAuth, signOut } from "firebase/auth";
     const setUid = useContext(SetUserContext)
 
     return (
-        <header className='flex flex-row justify-between items-center py-5 px-20 bg-black'>
+        <header className='grid grid-cols-[1fr_2fr] sm:flex sm:flex-row sm:justify-between items-center py-5 px-2 md:py-5 md:px-20 bg-black'>
             <Logo />
             <Navbar>
-                <li><Link className="hover:text-[#fb3] duration-500" to='/'>Home</Link></li>
-                <li><Link className="hover:text-[#fb3] duration-500" to='/projects'>Projetos</Link></li>
-                <li><Link className="hover:text-[#fb3] duration-500" to='/register'>Cadastre-se</Link></li>
+                <li><Link to='/'>Home</Link></li>
+                <li><Link to='/projects'>Projetos</Link></li>
+                <li className="flex text-center"><Link to='/register'>Criar conta</Link></li>
                 {!uid && (
-                    <li><Link className="hover:text-[#fb3] duration-500" to='/login'>Login</Link></li>
+                    <li><Link to='/login'>Login</Link></li>
                 )}
                 {uid && (
                     <li onClick={() => {
@@ -29,7 +29,7 @@ import { getAuth, signOut } from "firebase/auth";
                         }).catch((error) => {
                             console.log(error);
                         });
-                    }}><Link className="hover:text-[#fb3] duration-500" to='/projects'>Logout</Link></li>
+                    }}><Link to='/projects'>Logout</Link></li>
                 )}
             </Navbar>
         </header>

@@ -6,12 +6,10 @@ type ButtonProps = {
     handleClick?: React.MouseEventHandler
 }
 
-function Button ({to, text, handleClick}: ButtonProps ) {
+export default function Button ({to, text, handleClick}: ButtonProps ) {
     return (
-        <div className="flex items-center justify-center text-xl text-white bg-[#222] border-none no-underline py-3 px-4 hover:bg-black hover:text-[#fb3] duration-500">
+        <div className="flex items-center px-3 py-2 text-white justify-center bg-[#222] hover:bg-black">
             <Link to={to} onClick={handleClick}>{text}</Link>
         </div>
     )
 }
-
-export default Button

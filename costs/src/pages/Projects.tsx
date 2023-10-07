@@ -38,7 +38,7 @@ export default function Projects() {
     },[])
 
     return (
-        <main className="flex flex-col gap-y-14 px-20">
+        <main className="flex flex-col gap-y-7 px-5 md:gap-y-14 md:px-20">
             <MainTitleWithButton to="/newproject" btnText="Criar Projeto">
                 Meus Projetos
             </MainTitleWithButton>
@@ -50,7 +50,7 @@ export default function Projects() {
                 <p>Que pena! Você ainda não tem um projeto. Crie um clicando no botão acima e visualize aqui!</p>
             )}
             {projects && (
-                <div className="flex flex-row flex-wrap gap-x-9 gap-y-10">
+                <div className="flex flex-row justify-center sm:justify-start flex-wrap gap-x-9 gap-y-10">
                     {projects.map((project) => (
                         <Card key={project.id} project={project} />
                     )
