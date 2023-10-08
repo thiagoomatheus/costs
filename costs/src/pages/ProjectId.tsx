@@ -115,7 +115,6 @@ export default function ProjectId() {
                          ]
                     }
                     await setDoc(doc(db, uid, id), newProject, {merge: true})
-                    
                     const newProjects = projects?.map(projectServer => {
                         if (projectServer.id !== id) {
                             return projectServer

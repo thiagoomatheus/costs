@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react"
 import { ProjectsContext } from "../App"
 import MainTitleWithButton from "../components/layout/MainTitleWithButton"
 import Message from "../components/layout/Message"
-import Card from "../components/projects/Card"
+import Card from "../components/layout/ProjectCard"
 import Loading from "../components/layout/Loading";
 
 export default function Projects() {

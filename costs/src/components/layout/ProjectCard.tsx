@@ -9,7 +9,7 @@ type Props = {
     project: ProjectType
 }
 
-export default function Card({project}: Props) {
+export default function ProjectCard({project}: Props) {
 
     const projects = useContext(ProjectsContext)
     const setProjects = useContext(SetProjectsContext)
@@ -70,10 +70,6 @@ export default function Card({project}: Props) {
         
     }
 
-    function editProjects() {
-        navigate(`/projects/${project.id}`)
-    }
-
     return (
         <>
             {project && (
@@ -87,7 +83,9 @@ export default function Card({project}: Props) {
                         {project.category}
                     </p>
                     <div className="flex flex-row gap-x-4">
-                        <ButtonWithIcon text="Editar" icon='edit' handleClick={editProjects} />
+                        <ButtonWithIcon text="Editar" icon='edit' handleClick={() => {
+                            navigate(`/projects/${project.id}`)
+                        }} />
                         <ButtonWithIcon text="Delete" icon='delete' handleClick={() => {
                             deleteProject()
                         }} />

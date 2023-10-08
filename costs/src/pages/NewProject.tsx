@@ -59,7 +59,7 @@ export default function NewProject() {
             }
             try {
                 if (uid) {
-                    setDoc(doc(db, uid, id), data, {merge: true})
+                    setDoc(doc(db, uid, project.id), data, {merge: true})
                     projects?.push(data)
                     setProjects(projects)
                     navigate("/projects", {state: {message: "Projeto criado com sucesso", type: "success"}})

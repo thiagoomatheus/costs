@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function Social() {
     return(
-        <div id='footer' className='flex flex-row gap-x-8 text-5xl'>
+        <section id='footer' className='flex flex-row gap-x-8 text-5xl'>
             <Link to='//www.facebook.com'>
                 <FaFacebook />
             </Link>
@@ -13,6 +13,6 @@ export default function Social() {
             <Link to='//www.linkedin.com'>
                 <FaLinkedin />
             </Link>
-        </div>
+        </section>
     )
 }
