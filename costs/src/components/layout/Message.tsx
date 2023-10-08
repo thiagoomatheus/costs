@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react"
 import Styles from "./Message.module.css"
 
-function Message({msg, type}) {
+type Props = {
+    msg: string,
+    type: string
+}
+
+export default function Message({msg, type}: Props) {
 
     const [visible, setVisible] = useState(false)
 
@@ -13,12 +18,6 @@ function Message({msg, type}) {
 
         setVisible(true)
 
-        // const timer = setTimeout(()=> { // Forma que estava no curso, porém, quando a página era recarregada ele aparecia a mensagem novamente. Optei por fazer um set timeout no projects.
-        //     setVisible(false)
-        // }, 3000)
-
-        // return () => clearTimeout(timer)
-
     }, [msg])
 
     return (
@@ -28,10 +27,7 @@ function Message({msg, type}) {
                     <p>{msg}</p>
                 </div>
             )
-
             }
         </>
     )
 }
-
-export default Message

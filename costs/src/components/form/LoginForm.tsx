@@ -26,7 +26,7 @@ export default function LoginForm({handleSubmit, btnText}: Props) {
     }
     
     return (
-        <form className="flex flex-col sm:w-4/5 lg:w-2/5 m-auto gap-y-6" onSubmit={(e: React.FormEvent) => {
+        <form className="flex flex-col gap-y-6" onSubmit={(e: React.FormEvent) => {
             e.preventDefault()
             handleSubmit(user)
         }}>
@@ -37,7 +37,7 @@ export default function LoginForm({handleSubmit, btnText}: Props) {
                 Senha:
             </Input> 
             <p>Lembre-se: Sua senha deve conter pelo menos uma letra miníscula, uma letra maiúscula, um caractere especial ($*&@#), um número e 8 caracteres.</p>
-            <input className="font-bold bg-[#222] text-white text-base border-none cursor-pointer py-3 hover:text-[#fb3] duration-500" type="submit" value={btnText} />
+            <input type="submit" value={btnText} />
         </form>
     )
 }

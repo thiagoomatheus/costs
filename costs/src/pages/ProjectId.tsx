@@ -218,7 +218,7 @@ export default function ProjectId() {
     }
 
     return (
-        <main className="flex flex-col mx-10 gap-y-10">
+        <main className="flex flex-col gap-y-10">
             {showSection === "loading" && <Loading />}
 
             {message && <Message msg={message} type={type} />}

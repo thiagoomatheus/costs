@@ -6,6 +6,7 @@ import LoginForm, { UserType } from "../components/form/LoginForm";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { SetUserContext} from "../App";
+import ContentForm from "../components/form/ContentForm";
 
 const provider = new GoogleAuthProvider();
 
@@ -60,16 +61,18 @@ export default function Login() {
     }
 
     return (
-        <main className="flex flex-col mx-5 md:px-20 gap-y-10">
+        <main className="flex flex-col gap-y-10">
             {message && <Message msg={message} type={type} />}
             <MainTitleWithButton to="/register" btnText="Criar Conta">
                 Acesse sua conta
             </MainTitleWithButton>
-            <LoginForm handleSubmit={handleLogin} btnText="Acessar minha conta" />
-            <button onClick={handleLoginGoogle} className="flex flex-row justify-center gap-x-6 p-1 items-center bg-sky-500 sm:text-2xl font-bold text-white w-full sm:w-4/5 md:w-2/5 m-auto hover:bg-sky-700 duration-500">
-                <span>Login com Google</span> 
-                <span className="bg-white text-3xl p-1"><FcGoogle /></span>
-            </button>
+            <ContentForm>
+                <LoginForm handleSubmit={handleLogin} btnText="Acessar minha conta" />
+                <button onClick={handleLoginGoogle} className="flex flex-row justify-center gap-x-6 p-1 sm:p-2 items-center bg-sky-500 sm:text-2xl font-bold text-white w-full hover:bg-sky-700 duration-500 out">
+                    <span>Login com Google</span>
+                    <span className="bg-white text-3xl p-1"><FcGoogle /></span>
+                </button>
+            </ContentForm>
         </main>
     )
 }

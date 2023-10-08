@@ -38,7 +38,7 @@ export default function Projects() {
     },[])
 
     return (
-        <main className="flex flex-col gap-y-7 px-5 md:gap-y-14 md:px-20">
+        <main className="flex flex-col gap-y-7 md:gap-y-14">
             <MainTitleWithButton to="/newproject" btnText="Criar Projeto">
                 Meus Projetos
             </MainTitleWithButton>

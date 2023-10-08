@@ -5,6 +5,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { SetUserContext } from "../App";
 import { useContext, useState, useEffect } from "react"
 import Message from "../components/layout/Message";
+import ContentForm from "../components/form/ContentForm";
 
 export default function Register() {
 
@@ -53,13 +54,15 @@ export default function Register() {
     }
 
     return (
-        <main className="flex flex-col mx-5 md:px-20 gap-y-10">
+        <main className="flex flex-col gap-y-10">
             {message && <Message msg={message} type={type} />}
             <MainTitleWithButton to="/login" btnText="Login">
                 Crie Sua Conta
             </MainTitleWithButton>
             <p>Com seu cadastro ativo você consegue acessar seus projetos de qualquer lugar! Cadastre-se preenchendo os campos abaixo.</p>
-            <LoginForm btnText="Cadastrar" handleSubmit={handleRegister} />
+            <ContentForm>
+                <LoginForm btnText="Cadastrar" handleSubmit={handleRegister} />
+            </ContentForm>
         </main>
     )
 }

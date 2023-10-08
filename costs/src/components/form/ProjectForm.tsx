@@ -48,7 +48,7 @@ export default function ProjectForm({btnText, dataProject, id, handleSubmit}: Pr
                     Selecione a categoria:
                 </Select>
 
-                <input className="font-bold bg-[#222] text-white text-xl border-none cursor-pointer py-3 hover:text-[#fb3] duration-500" type="submit" value={btnText} />
+                <input type="submit" value={btnText} />
 
             </form>
         </>
