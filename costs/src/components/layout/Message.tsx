@@ -3,7 +3,7 @@ import Styles from "./Message.module.css"
 
 type Props = {
     msg: string,
-    type: string
+    type: "success" | "error" | undefined
 }
 
 export default function Message({msg, type}: Props) {
@@ -22,7 +22,7 @@ export default function Message({msg, type}: Props) {
 
     return (
         <>
-            {visible && (
+            {visible && type && (
                 <div className={`${Styles.message} ${Styles[type]}`}>
                     <p>{msg}</p>
                 </div>

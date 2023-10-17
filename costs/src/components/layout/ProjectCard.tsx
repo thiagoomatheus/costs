@@ -1,9 +1,8 @@
 import ButtonWithIcon from './ButtonWithIcon'
-import { doc,deleteDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom"
-import { ProjectType, ProjectsContext, SetProjectsContext } from '../../App'
-import { db } from '../../App';
-import { useContext } from 'react';
+import { ProjectType } from '../../App'
+
+import useProjects from '../hooks/useProjects';
 
 type Props = {
     project: ProjectType
@@ -11,8 +10,8 @@ type Props = {
 
 export default function ProjectCard({project}: Props) {
 
-    const projects = useContext(ProjectsContext)
-    const setProjects = useContext(SetProjectsContext)
+    const { removeProject } = useProjects()
+    const navigate = useNavigate()
 
     let color: string = ""
 
@@ -24,51 +23,7 @@ export default function ProjectCard({project}: Props) {
         color = "#fbe7c6";
     } else if (project.category === "Design") {
         color = "#b4f8c8";
-    }
-    
-    const navigate = useNavigate()
-
-    async function deleteProject() {
-
-    //     fetch(`http://localhost:5000/projects/${id}`, {
-    //         method: "DELETE",
-    //         headers: {
-    //             "Content-type": "application/json",
-    //         },
-    //     })
-    //     .then(() => {
-    //         // setProjects(projects.filter(projects => projects.id !== id))
-    //         navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})
-    //     })
-    //     .catch((err) => console.log(err))
-
-    //     function deleteProject() { // Funcionando com localStorage
-    //     projects = projects.filter(projects => projects.id !== id)
-    //     localStorage.setItem("projects", JSON.stringify(projects))
-    //     setProjects(projects)
-    // }
-    
-        // const projectRef = doc(db, "projects", "3lMligpcZ07hUbWgKvrD")
-        // try {
-        //     await updateDoc(projectRef, {
-        //         projects: arrayRemove(project)
-        //     })
-        //     setProjects(projects?.filter((item) => item.id !== project.id))
-        //     navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})  
-        // } catch (error) {
-        //     console.log(error);
-        // } 
-
-        try {
-            await deleteDoc(doc(db, 'userId', project.id))
-            setProjects(projects?.filter((item) => item.id !== project.id))
-            navigate("/projects", {state: {message: "Projeto removido com sucesso", type: "error"}})
-        } catch (error) {
-            console.log(error)
-        }
-        
-        
-    }
+    }    
 
     return (
         <>
@@ -87,7 +42,7 @@ export default function ProjectCard({project}: Props) {
                             navigate(`/projects/${project.id}`)
                         }} />
                         <ButtonWithIcon text="Delete" icon='delete' handleClick={() => {
-                            deleteProject()
+                            removeProject(project.id)
                         }} />
                     </div>
                 </div>
