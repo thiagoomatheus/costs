@@ -1,8 +1,7 @@
 import ButtonWithIcon from './ButtonWithIcon'
 import { useNavigate } from "react-router-dom"
-import { ProjectType } from '../../App'
-
 import useProjects from '../hooks/useProjects';
+import { ProjectType } from '../types/types';
 
 type Props = {
     project: ProjectType

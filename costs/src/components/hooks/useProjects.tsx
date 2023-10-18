@@ -3,7 +3,8 @@ import { useContext } from "react"
 import { useParams } from "react-router-dom"
 import useMessage, { Message } from "./useMessage"
 import { ProjectsContext, SetProjectsContext, UserContext } from "../contexts/Contexts"
-import { ProjectType, ServiceType, db } from "../../App"
+import { ProjectType, ServiceType } from "../types/types"
+import { db } from "../../App"
 
 export default function useProjects() {
     const { id } = useParams()

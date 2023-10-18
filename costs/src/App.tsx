@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { CategoriesContext, MessageContext, ProjectsContext, SetMessageContext, SetProjectsContext, SetUserContext, UserContext } from './components/contexts/Contexts';
 import { Message } from './components/hooks/useMessage';
+import { ProjectType } from './components/types/types';
 
 const app = initializeApp({
   apiKey: "AIzaSyCyGIgTSkafFGsVTBJCqbNFQVjpXJtw9Fg",
@@ -26,33 +27,15 @@ const app = initializeApp({
 
 export const db = getFirestore(app)
 
-export type ServiceType = {
-  id: string,
-  title: string,
-  cost: number,
-  description: string
-}
-export type ProjectType = {
-  id: string,
-  name: string | undefined,
-  budget: number | undefined,
-  cost: number | undefined,
-  category: string | undefined,
-  services: ServiceType[] |
-   undefined
-}
-export type ProjectsData = Array<ProjectType> | undefined
-export type Categories = {
-  id: number,
-  name: string
-}[]
-
 export default function App() {
 
   const [projects, setProjects] = useState<ProjectType[]>()
   const [categories, setCategories] = useState()
   const [uid, setUid] = useState<string | undefined>()
-  const [message, setMessage] = useState<Message | undefined>()
+  const [message, setMessage] = useState<{
+    message: Message | undefined,
+    type: "error" | "success" | undefined
+  }>()
 
   useEffect(() => {  // Usando coleção com o id do usuário
     const data: any = [];

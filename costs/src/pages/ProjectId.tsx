@@ -1,8 +1,8 @@
-import { useParams, useNavigate, useLocation } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
 import MainTitleWithButton from "../components/layout/MainTitleWithButton"
 import Loading from "../components/layout/Loading"
-import { ProjectType, ServiceType } from "../App"
+import { ProjectType, ServiceType } from "../components/types/types"
 import ServiceForm from "../components/form/ServiceForm"
 import Message from "../components/layout/Message"
 import ServiceCard from "../components/layout/ServiceCard"
@@ -19,25 +19,6 @@ export default function ProjectId() {
     const [project, setProject] = useState<ProjectType>()
     const [showSection, setShowSection] = useState<"loading" | "showData" | "editProject" | "createService" | "editService">("loading")
     const [serviceData, setServiceData] = useState<ServiceType | undefined>(undefined)
-
-    // // Message
-    // let message = "";
-    // let type = "";
-
-    // if (location.state) {
-    //     message = location.state.message
-    //     type = location.state.type
-    // }
-
-    // useEffect(() => {
-    //     if (location.state) {
-    //         const timer = setTimeout(() => {
-    //             navigate(location.state, {})
-    //         }, 3000)
-
-    //         return () => clearTimeout(timer)
-    //     }
-    // },[project])
 
     useEffect(() => {
         if (projects !== undefined) {

@@ -1,5 +1,5 @@
 import { createContext } from "react"
-import { Categories, ProjectType } from "../../App"
+import { Categories, ProjectType } from "../types/types"
 import { Message } from "../hooks/useMessage"
 
 export const MessageContext = createContext<{
