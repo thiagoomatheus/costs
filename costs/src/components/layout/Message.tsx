@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import Styles from "./Message.module.css"
+import { MessageContext } from "../contexts/Contexts"
 
 type Props = {
     msg: string,
     type: "success" | "error" | undefined
 }
 
-export default function Message({msg, type}: Props) {
+export default function Message() {
 
     const [visible, setVisible] = useState(false)
+    const message = useContext(MessageContext)
 
     useEffect(() => {
-        if(!msg) {
+        if(!message) {
             setVisible(false)
             return
         }
-
         setVisible(true)
-
-    }, [msg])
-
+    }, [message])
+    
     return (
         <>
-            {visible && type && (
-                <div className={`${Styles.message} ${Styles[type]}`}>
-                    <p>{msg}</p>
+            {visible && message?.message && message?.type && (
+                <div className={`${Styles.message} ${Styles[message.type]}`}>
+                    <p>{message.message}</p>
                 </div>
             )
             }

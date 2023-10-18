@@ -5,8 +5,8 @@ import Message from "../components/layout/Message";
 import LoginForm, { UserType } from "../components/form/LoginForm";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import { SetUserContext} from "../App";
 import ContentForm from "../components/form/ContentForm";
+import { SetUserContext } from "../components/contexts/Contexts";
 
 const provider = new GoogleAuthProvider();
 
@@ -62,7 +62,7 @@ export default function Login() {
 
     return (
         <main className="flex flex-col gap-y-10">
-            {message && <Message msg={message} type={type} />}
+            <Message />
             <MainTitleWithButton to="/register" btnText="Criar Conta">
                 Acesse sua conta
             </MainTitleWithButton>

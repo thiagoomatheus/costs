@@ -1,30 +1,25 @@
 import { useState, useEffect, useContext } from "react"
-import { ProjectsContext } from "../App"
 import MainTitleWithButton from "../components/layout/MainTitleWithButton"
 import Message from "../components/layout/Message"
 import ProjectCard from "../components/layout/ProjectCard"
 import Loading from "../components/layout/Loading";
-import useMessage from "../components/hooks/useMessage"
+import { ProjectsContext } from "../components/contexts/Contexts";
 
 export default function Projects() {
     
     const projects = useContext(ProjectsContext)
-    const { message, type } = useMessage()
-
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         setLoading(false)
     },[])
 
-    // const [projects, setProjects] = useState(JSON.parse(localStorage.getItem("projects"))) // Com localStorage - funcionando
-
     return (
         <main className="flex flex-col gap-y-7 md:gap-y-14">
             <MainTitleWithButton to="/newproject" btnText="Criar Projeto">
                 Meus Projetos
             </MainTitleWithButton>
-            {message && <Message msg={message} type={type} />}
+            <Message />
             {loading && (
                 <Loading />
             )}

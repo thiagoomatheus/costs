@@ -6,19 +6,14 @@ import { ProjectType, ServiceType } from "../App"
 import ServiceForm from "../components/form/ServiceForm"
 import Message from "../components/layout/Message"
 import ServiceCard from "../components/layout/ServiceCard"
-import { ProjectsContext } from "../App"
 import ProjectForm from "../components/form/ProjectForm"
 import useProjects from "../components/hooks/useProjects"
+import { ProjectsContext } from "../components/contexts/Contexts"
 
 export default function ProjectId() {
 
     const { editProject, createService, editService, removeService } = useProjects()
     const projects = useContext(ProjectsContext)
-    
-
-    // Hooks
-    const location = useLocation()
-    const navigate = useNavigate()
     const { id } = useParams()
 
     const [project, setProject] = useState<ProjectType>()
@@ -55,7 +50,7 @@ export default function ProjectId() {
         <main className="flex flex-col gap-y-10">
             {showSection === "loading" && <Loading />}
 
-            {location.state && <Message msg={location.state.message} type={location.state.type} />}
+            <Message />
 
             {project && (
                 <MainTitleWithButton to="" btnText={showSection === "showData" ? "Editar projeto" : "Fechar"} handleClick={() => {

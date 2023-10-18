@@ -1,8 +1,9 @@
 import { deleteDoc, doc, setDoc } from "firebase/firestore"
-import { ProjectType, ProjectsContext, ServiceType, SetProjectsContext, UserContext, db } from "../../App"
 import { useContext } from "react"
 import { useParams } from "react-router-dom"
 import useMessage, { Message } from "./useMessage"
+import { ProjectsContext, SetProjectsContext, UserContext } from "../contexts/Contexts"
+import { ProjectType, ServiceType, db } from "../../App"
 
 export default function useProjects() {
     const { id } = useParams()

@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 import LoginForm, { UserType } from "../components/form/LoginForm";
 import MainTitleWithButton from "../components/layout/MainTitleWithButton";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { SetUserContext } from "../App";
 import { useContext, useState, useEffect } from "react"
 import Message from "../components/layout/Message";
 import ContentForm from "../components/form/ContentForm";
+import { SetUserContext } from "../components/contexts/Contexts";
 
 export default function Register() {
 
@@ -55,7 +55,7 @@ export default function Register() {
 
     return (
         <main className="flex flex-col gap-y-10">
-            {message && <Message msg={message} type={type} />}
+            <Message />
             <MainTitleWithButton to="/login" btnText="Login">
                 Crie Sua Conta
             </MainTitleWithButton>

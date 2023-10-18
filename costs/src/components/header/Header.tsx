@@ -2,9 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from './Logo'
 import Navbar from './Navbar'
 import { useContext, useState } from "react";
-import { SetUserContext, UserContext } from "../../App";
 import { getAuth, signOut } from "firebase/auth";
 import { MdOutlineMenu, MdOutlineClose } from "react-icons/md";
+import { SetUserContext, UserContext } from "../contexts/Contexts";
 
  export default function Header() {
     const navigate = useNavigate()

@@ -1,5 +1,5 @@
 import {useContext} from "react"
-import { CategoriesContext} from "../../App"
+import { CategoriesContext } from "../contexts/Contexts"
 
 type Props = {
     children: React.ReactNode,
