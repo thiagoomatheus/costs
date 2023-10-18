@@ -17,6 +17,10 @@ export enum Message {
     FailedRemovedService = "Erro ao remover serviço, tente novamente mais tarde",
     BudgetBelowCost = "O orçamento não pode ser menor que o custo do projeto",
     ServiceExpensive = "Valor de serviços ultrapassaram o orçamento",
+    LoginSuccess = "Login realizado com sucesso",
+    LoginFailed = "Falha no login, verifique os dados e tente novamente",
+    EmailInvalid = 'Insira um email válido',
+    PasswordInvalid = 'Insira uma senha válida'
 }
 
 export default function useMessage() {
