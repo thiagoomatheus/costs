@@ -1,8 +1,8 @@
-import { ServiceType } from "../../App"
+import { ServiceType } from "../types/types"
 import ButtonWithIcon from "./ButtonWithIcon"
 
 type Props = {
-    service: ServiceType
+    service: ServiceType,
     handleRemove: (service: ServiceType) => void
     handleEditService?: (service: ServiceType) => void
 }
