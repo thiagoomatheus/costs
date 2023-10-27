@@ -8,12 +8,13 @@ import Message from "../components/layout/Message"
 import ServiceCard from "../components/layout/ServiceCard"
 import ProjectForm from "../components/form/ProjectForm"
 import useProjects from "../components/hooks/useProjects"
-import { ProjectsContext } from "../components/contexts/Contexts"
+import { ProjectsContext } from "../components/contexts/ProjectsContextProvider.tsx"
 
 export default function ProjectId() {
 
     const { editProject, createService, editService, removeService } = useProjects()
-    const projects = useContext(ProjectsContext)
+    const projectsContext = useContext(ProjectsContext)
+    const { projects } = projectsContext
     const { id } = useParams()
 
     const [project, setProject] = useState<ProjectType>()

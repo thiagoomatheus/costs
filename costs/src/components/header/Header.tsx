@@ -34,7 +34,8 @@ import { SetUserContext, UserContext } from "../contexts/Contexts";
                 {uid && (
                     <li onClick={() => {
                         const auth = getAuth();
-                        signOut(auth).then(() => {
+                        signOut(auth)
+                        .then(() => {
                             setUid(undefined)
                             navigate("/projects", {state: { message: "Usuário desconectado", type: "error"}})
                         }).catch((error) => {

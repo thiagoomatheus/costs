@@ -15,7 +15,7 @@ cost: number,
 description: string
 }
 
-export type Categories = {
+export type Categorie = {
 id: number,
 name: string
-}[]
+}

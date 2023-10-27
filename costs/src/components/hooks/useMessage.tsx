@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { SetMessageContext } from "../contexts/Contexts";
+import { MessageContext } from "../contexts/MessageContextProvider";
 
 export enum Message {
     CreatedProject = "Projeto criado com sucesso",
@@ -25,31 +25,53 @@ export enum Message {
 
 export default function useMessage() {
 
-    const setMessage = useContext(SetMessageContext)
+    const messageContext = useContext(MessageContext)
+
+    const { setMessage } = messageContext
+
     const navigate = useNavigate()
+
     const { id } = useParams()
 
+    
     const generateMessage = (messageSuccess?: Message, messageError?: Message, type?: "success" | "error") => {
         
         switch (type) {
+
             case "success":
+
                 setMessage({
+
                     message: messageSuccess,
+
                     type: type
+
                 })
+
                 navigate((id ? `/projects/${id}` : `/projects`))
+
                 break;
+
             case "error":
+
                 setMessage({
+
                     message: messageError,
+
                     type: type
+
                 })
+
                 navigate((id ? `/projects/${id}` : `/projects`))
+
                 break
+
         };
 
         const timer = setTimeout(() => {
+
             setMessage(undefined)
+            
         }, 3000)
 
         return () => clearTimeout(timer)

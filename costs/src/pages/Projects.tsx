@@ -3,11 +3,12 @@ import MainTitleWithButton from "../components/layout/MainTitleWithButton"
 import Message from "../components/layout/Message"
 import ProjectCard from "../components/layout/ProjectCard"
 import Loading from "../components/layout/Loading";
-import { ProjectsContext } from "../components/contexts/Contexts";
+import { ProjectsContext } from "../components/contexts/ProjectsContextProvider.tsx";
 
 export default function Projects() {
     
-    const projects = useContext(ProjectsContext)
+    const projectsContext = useContext(ProjectsContext)
+    const { projects } = projectsContext
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {

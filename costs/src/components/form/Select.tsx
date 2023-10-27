@@ -1,5 +1,6 @@
-import {useContext} from "react"
-import { CategoriesContext } from "../contexts/Contexts"
+import { useState, useEffect } from "react"
+import useGetData from "../hooks/useGetData"
+import { Categorie } from "../types/types"
 
 type Props = {
     children: React.ReactNode,
@@ -8,20 +9,36 @@ type Props = {
     value: string | undefined
 }
 
-function Select({children, nameHTML, handleChange, value}: Props) {
-    const categories = useContext(CategoriesContext)
+export default function Select({children, nameHTML, handleChange, value}: Props) {
+
+    const [categories, setCategories] = useState<Categorie[]>()
+
+    const { getCategories } = useGetData()
+
+    useEffect( () => {
+        getCategories()
+        .then(response => {
+            setCategories(response)
+        })
+        .catch(response => {
+            console.log(response);
+        })
+    }, [])
 
     return (
         <label className="flex flex-col gap-y-3 font-bold">{children}
+
             <select name={nameHTML} className="p-2 font-normal text-gray-700 border-2 rounded-md border-black" onChange={handleChange} required={true} value={value ? value : "default"} >
+
                 <option disabled value="default" >Selecione uma opção</option>
-                {categories != undefined && categories.map(({name, id}) => (
+
+                {categories && categories.map(({name, id}) => (
                     <option key={id} value={name}>{name}</option>
                 )
                 )}
+
             </select>
+
         </label>
     )
 }
-
-export default Select

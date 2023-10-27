@@ -2,14 +2,15 @@ import { deleteDoc, doc, setDoc } from "firebase/firestore"
 import { useContext } from "react"
 import { useParams } from "react-router-dom"
 import useMessage, { Message } from "./useMessage"
-import { ProjectsContext, SetProjectsContext, UserContext } from "../contexts/Contexts"
+import { UserContext } from "../contexts/Contexts"
 import { ProjectType, ServiceType } from "../types/types"
 import { db } from "../../App"
+import { ProjectsContext } from "../contexts/ProjectsContextProvider.tsx"
 
 export default function useProjects() {
     const { id } = useParams()
-    const projects = useContext(ProjectsContext)
-    const setProjects = useContext(SetProjectsContext)
+    const projectsContext = useContext(ProjectsContext)
+    const { projects, setProjects } = projectsContext
     const uid = useContext(UserContext)
     const { generateMessage } = useMessage()
 
