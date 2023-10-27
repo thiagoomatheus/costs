@@ -1,4 +1,4 @@
-import { ServiceType } from "../../App"
+import { ServiceType } from "../types/types"
 import ButtonWithIcon from "./ButtonWithIcon"
 
 type Props = {

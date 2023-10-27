@@ -1,4 +1,4 @@
-import { ProjectType } from "../../App"
+import { ProjectType } from "../types/types"
 import Input from "./Input"
 import Select from "./Select"
 import { useState } from "react"

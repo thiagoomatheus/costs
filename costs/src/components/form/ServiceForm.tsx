@@ -1,7 +1,7 @@
 import { useState } from "react"
 import Input from "./Input"
 import uuid from "react-uuid"
-import { ServiceType } from "../../App"
+import { ServiceType } from "../types/types"
 
 type Props = {
     btnText: string,
